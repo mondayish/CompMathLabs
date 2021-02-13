@@ -1,2 +1,4 @@
 # Project exclude paths
 /lab1/target/
+**/*.iml
+.idea
