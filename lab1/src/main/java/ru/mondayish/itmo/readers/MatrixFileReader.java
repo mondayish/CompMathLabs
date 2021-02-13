@@ -7,6 +7,9 @@ import java.nio.file.Paths;
 import java.util.Optional;
 import java.util.Scanner;
 
+/**
+ * Класс для чтения матрицы из файла
+ */
 public class MatrixFileReader extends MatrixReader {
 
     private final static String PATH_TO_MATRIX_FILES = "lab1/src/main/resources/";

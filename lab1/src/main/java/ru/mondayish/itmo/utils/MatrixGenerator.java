@@ -5,6 +5,9 @@ import ru.mondayish.itmo.models.Matrix;
 import java.util.Random;
 import java.util.stream.IntStream;
 
+/**
+ * Генератор матрицы с рандомными числами
+ */
 public class MatrixGenerator {
 
     private static final int MAX_ELEMENT_VALUE = 10000;

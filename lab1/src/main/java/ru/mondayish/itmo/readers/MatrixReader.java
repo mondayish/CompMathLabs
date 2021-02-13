@@ -5,6 +5,9 @@ import ru.mondayish.itmo.models.Matrix;
 import java.util.Scanner;
 import java.util.stream.IntStream;
 
+/**
+ * Абстрактный класс для чтения матрицы
+ */
 public abstract class MatrixReader {
 
     protected Matrix readMatrixFromScanner(Scanner scanner, int size) throws RuntimeException {

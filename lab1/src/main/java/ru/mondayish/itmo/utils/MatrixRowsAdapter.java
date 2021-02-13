@@ -7,6 +7,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.IntStream;
 
+/**
+ * Адаптер для преобразования матрицы в лист рядов и обратно
+ */
 public class MatrixRowsAdapter {
 
     public static Matrix fromRowsToMatrix(List<Row> rows) {

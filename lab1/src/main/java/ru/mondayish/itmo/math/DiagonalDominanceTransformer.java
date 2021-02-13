@@ -10,6 +10,10 @@ import java.util.stream.IntStream;
 
 import static java.lang.Math.abs;
 
+/**
+ * Трансформирует матрицу в состояние диагонального преобладания
+ * или кидает исключение с сообщением о невозможности этого
+ */
 @AllArgsConstructor
 public class DiagonalDominanceTransformer {
 

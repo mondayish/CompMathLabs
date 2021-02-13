@@ -6,6 +6,9 @@ import ru.mondayish.itmo.models.Matrix;
 import java.util.Optional;
 import java.util.Scanner;
 
+/**
+ * Класс для чтения матрицы из консоли
+ */
 public class MatrixConsoleReader extends MatrixReader {
 
     public Optional<Matrix> readFromConsole() {

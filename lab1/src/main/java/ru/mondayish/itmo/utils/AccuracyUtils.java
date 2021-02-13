@@ -14,7 +14,7 @@ public class AccuracyUtils {
             consoleWriter.write("Введите точность (от " + String.format("%.6f", MIN_ACCURACY) + " до " + MAX_ACCURACY + "): ");
             Scanner scanner = new Scanner(System.in);
             accuracy = scanner.nextDouble();
-        } while (accuracy < MAX_ACCURACY || accuracy > MAX_ACCURACY);
+        } while (accuracy < MIN_ACCURACY || accuracy > MAX_ACCURACY);
         return accuracy;
     }
 }

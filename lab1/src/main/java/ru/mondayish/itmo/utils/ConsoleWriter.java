@@ -1,5 +1,8 @@
 package ru.mondayish.itmo.utils;
 
+/**
+ * Обертка для вывода в консоль, написанная не знаю зачем
+ */
 public class ConsoleWriter {
 
     public void write(String message) {

@@ -7,6 +7,10 @@ import ru.mondayish.itmo.models.Matrix;
 import java.util.stream.DoubleStream;
 import java.util.stream.IntStream;
 
+/**
+ * Решает СЛАУ методом простых итераций
+ * и возвращает вектор погрешностей, неизвестных и кол-во итераций
+ */
 @RequiredArgsConstructor
 public class SimpleIterationCalculator {
 
@@ -21,13 +25,13 @@ public class SimpleIterationCalculator {
         int iterationCount = 0;
         do {
             iterationCount++;
-            double[] xVector = new double[approximationVector.length];
-            IntStream.range(0, xVector.length).forEach(i -> {
-                xVector[i] = IntStream.range(0, xVector.length)
+            double[] nextXVector = new double[approximationVector.length];
+            IntStream.range(0, nextXVector.length).forEach(i -> {
+                nextXVector[i] = IntStream.range(0, nextXVector.length)
                         .mapToDouble(j -> matrix.getKoefs()[i][j] * approximationVector[j]).sum() + matrix.getFreeMembers()[i];
-                faultVector[i] = Math.abs(xVector[i] - approximationVector[i]);
+                faultVector[i] = Math.abs(nextXVector[i] - approximationVector[i]);
             });
-            approximationVector = xVector;
+            approximationVector = nextXVector;
         } while (DoubleStream.of(faultVector).max().orElse(0) > neededAccuracy);
         return new CalculationResult(approximationVector, faultVector, iterationCount);
     }
