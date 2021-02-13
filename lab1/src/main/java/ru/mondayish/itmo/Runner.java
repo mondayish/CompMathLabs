@@ -3,13 +3,13 @@ package ru.mondayish.itmo;
 import ru.mondayish.itmo.math.DiagonalDominanceTransformer;
 import ru.mondayish.itmo.math.SimpleIterationCalculator;
 import ru.mondayish.itmo.models.CalculationResult;
+import ru.mondayish.itmo.models.Matrix;
 import ru.mondayish.itmo.readers.MatrixConsoleReader;
 import ru.mondayish.itmo.readers.MatrixFileReader;
-import ru.mondayish.itmo.models.Matrix;
+import ru.mondayish.itmo.utils.AccuracyUtils;
 import ru.mondayish.itmo.utils.ConsoleWriter;
 
 import java.util.Arrays;
-import java.util.Scanner;
 
 public class Runner {
     public static void main(String[] args) {
@@ -19,7 +19,7 @@ public class Runner {
                             new IllegalArgumentException("Убедитесь, что ваш файл существует, или исправьте ваш файл!")) :
                     new MatrixConsoleReader().readFromConsole().orElseThrow(() ->
                             new IllegalArgumentException("Будьте аккуратны при вводе матрицы!"));
-            double accuracy = getAccuracy();
+            double accuracy = AccuracyUtils.getAccuracy();
             matrix = new DiagonalDominanceTransformer(matrix).transform();
             CalculationResult calculationResult = new SimpleIterationCalculator(matrix, accuracy).calculate();
             writeResultsToConsole(calculationResult);
@@ -33,11 +33,5 @@ public class Runner {
         consoleWriter.writeln("Вектор неизвестных: " + Arrays.toString(calculationResult.getXVector()));
         consoleWriter.writeln("Вектор погрешностей: " + Arrays.toString(calculationResult.getFaultVector()));
         consoleWriter.writeln("Количество итераций: " + calculationResult.getIterationCount());
-    }
-
-    private static double getAccuracy() {
-        ConsoleWriter consoleWriter = new ConsoleWriter();
-        consoleWriter.write("Введите точность: ");
-        return new Scanner(System.in).nextDouble();
     }
 }

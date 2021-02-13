@@ -3,6 +3,7 @@ package ru.mondayish.itmo.utils;
 import ru.mondayish.itmo.models.Matrix;
 
 import java.util.Random;
+import java.util.stream.IntStream;
 
 public class MatrixGenerator {
 
@@ -13,11 +14,9 @@ public class MatrixGenerator {
         Random random = new Random();
         double[][] koefs = new double[size][size];
         double[] freeMembers = new double[size];
-        for (int i = 0; i < size; i++) {
-            for (int j = 0; j < size + 1; j++) {
-                koefs[i][j] = random.nextInt(MAX_ELEMENT_VALUE) + MIN_ELEMENT_VALUE;
-            }
-        }
+        IntStream.range(0, size).forEach(i -> {
+            IntStream.range(0, size + 1).forEach(j -> koefs[i][j] = random.nextInt(MAX_ELEMENT_VALUE) + MIN_ELEMENT_VALUE);
+        });
         return new Matrix(koefs, freeMembers);
     }
 }

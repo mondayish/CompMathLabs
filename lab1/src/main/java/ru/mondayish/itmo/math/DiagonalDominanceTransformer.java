@@ -6,6 +6,7 @@ import ru.mondayish.itmo.models.Row;
 import ru.mondayish.itmo.utils.MatrixRowsAdapter;
 
 import java.util.*;
+import java.util.stream.IntStream;
 
 import static java.lang.Math.abs;
 
@@ -31,11 +32,11 @@ public class DiagonalDominanceTransformer {
         Map<Integer, Row> rowsWithDominanceKeyElement = new HashMap<>();
         rows.forEach(row -> {
             double[] koefs = row.getKoefs();
-            for (int i = 0; i < koefs.length; i++) {
+            IntStream.range(0, koefs.length).forEach(i -> {
                 if (2 * abs(koefs[i]) - Arrays.stream(koefs).map(Math::abs).sum() >= 0) {
                     rowsWithDominanceKeyElement.put(i, row);
                 }
-            }
+            });
         });
         Row[] swappedRows = new Row[rows.size()];
         for (int i = 0; i < rows.size(); i++) {
