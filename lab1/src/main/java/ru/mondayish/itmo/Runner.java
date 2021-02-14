@@ -22,16 +22,9 @@ public class Runner {
             double accuracy = AccuracyUtils.getAccuracy();
             matrix = new DiagonalDominanceTransformer(matrix).transform();
             CalculationResult calculationResult = new SimpleIterationCalculator(matrix, accuracy).calculate();
-            writeResultsToConsole(calculationResult);
+            ConsoleWriter.writeResultsToConsole(calculationResult);
         } catch (IllegalArgumentException e) {
             System.out.println(e.getMessage());
         }
-    }
-
-    private static void writeResultsToConsole(CalculationResult calculationResult) {
-        ConsoleWriter consoleWriter = new ConsoleWriter();
-        consoleWriter.writeln("Вектор неизвестных: " + Arrays.toString(calculationResult.getXVector()));
-        consoleWriter.writeln("Вектор погрешностей: " + Arrays.toString(calculationResult.getFaultVector()));
-        consoleWriter.writeln("Количество итераций: " + calculationResult.getIterationCount());
     }
 }

@@ -6,23 +6,27 @@ import ru.mondayish.itmo.math.DiagonalDominanceTransformer;
 import ru.mondayish.itmo.math.SimpleIterationCalculator;
 import ru.mondayish.itmo.models.CalculationResult;
 import ru.mondayish.itmo.models.Matrix;
+import ru.mondayish.itmo.utils.ConsoleWriter;
 import ru.mondayish.itmo.utils.MatrixGenerator;
 
 import java.util.Arrays;
 import java.util.stream.IntStream;
 
-public class GeneratorTest {
+public class SimpleIterationTest {
+
+    private static final int GENERATE_SIZE = 5;
+    private static final double GENERATE_ACCURACY = 0.01;
 
     @Test
     public void testGenerator() {
-        Matrix matrix = new MatrixGenerator().generateMatrixWithDiagonalDominance(5);
+        System.out.println("Генерирование матрицы " + GENERATE_SIZE + "x" + GENERATE_SIZE + "...");
+        Matrix matrix = new MatrixGenerator().generateMatrixWithDiagonalDominance(GENERATE_SIZE);
         double[][] koefs = matrix.getKoefs();
         double[] freeMembers = matrix.getFreeMembers();
-        IntStream.range(0, koefs.length).forEach(i -> System.out.println(Arrays.toString(koefs[i]) + " " + freeMembers[i]));
-        CalculationResult calculationResult = new SimpleIterationCalculator(matrix, 0.01).calculate();
-        System.out.println(calculationResult.getIterationCount());
-        System.out.println(Arrays.toString(calculationResult.getXVector()));
-        System.out.println(Arrays.toString(calculationResult.getFaultVector()));
+        IntStream.range(0, koefs.length).forEach(i -> System.out.println(Arrays.toString(koefs[i]) + " * X = " + freeMembers[i]));
+        System.out.println("Используется точность = "+GENERATE_ACCURACY);
+        CalculationResult calculationResult = new SimpleIterationCalculator(matrix, GENERATE_ACCURACY).calculate();
+        ConsoleWriter.writeResultsToConsole(calculationResult);
     }
 
     @Test
