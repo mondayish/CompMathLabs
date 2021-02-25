@@ -10,17 +10,16 @@ import java.util.Arrays;
 public class ConsoleWriter {
 
     public static void writeResultsToConsole(CalculationResult calculationResult) {
-        ConsoleWriter consoleWriter = new ConsoleWriter();
-        consoleWriter.writeln("Вектор неизвестных: " + Arrays.toString(calculationResult.getXVector()));
-        consoleWriter.writeln("Вектор погрешностей: " + Arrays.toString(calculationResult.getFaultVector()));
-        consoleWriter.writeln("Количество итераций: " + calculationResult.getIterationCount());
+        writeln("Вектор неизвестных: " + Arrays.toString(calculationResult.getXVector()));
+        writeln("Вектор погрешностей: " + Arrays.toString(calculationResult.getFaultVector()));
+        writeln("Количество итераций: " + calculationResult.getIterationCount());
     }
 
-    public void write(String message) {
+    public static void write(String message) {
         System.out.print(message);
     }
 
-    public void writeln(String message) {
+    public static void writeln(String message) {
         System.out.println(message);
     }
 }
