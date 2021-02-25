@@ -10,8 +10,7 @@ public class AccuracyUtils {
     public static double getAccuracy() {
         double accuracy;
         do {
-            ConsoleWriter consoleWriter = new ConsoleWriter();
-            consoleWriter.write("Введите точность (от " + String.format("%.6f", MIN_ACCURACY) + " до " + MAX_ACCURACY + "): ");
+            ConsoleWriter.write("Введите точность (от " + String.format("%.6f", MIN_ACCURACY) + " до " + MAX_ACCURACY + "): ");
             Scanner scanner = new Scanner(System.in);
             accuracy = scanner.nextDouble();
         } while (accuracy < MIN_ACCURACY || accuracy > MAX_ACCURACY);
