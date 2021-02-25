@@ -8,8 +8,8 @@ import java.util.stream.IntStream;
 
 public class DiagonalDominanceMatrixGenerator {
 
-    private static final int MAX_ELEMENT_VALUE = 10000;
-    private static final int MIN_ELEMENT_VALUE = -10000;
+    private static final int MAX_ELEMENT_VALUE = 500;
+    private static final int MIN_ELEMENT_VALUE = -500;
 
     public static Matrix generateMatrix(int size, double[] xVector) {
         if (xVector.length != size)

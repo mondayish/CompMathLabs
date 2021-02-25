@@ -16,7 +16,7 @@ import java.util.stream.IntStream;
 
 public class SimpleIterationTest {
 
-    private static final int GENERATE_SIZE = 1000;
+    private static final int GENERATE_SIZE = 12;
     private static final double GENERATE_ACCURACY = 0.001;
     private static final int MAX_X_VALUE = 10;
     private static final int MIN_X_VALUE = -10;

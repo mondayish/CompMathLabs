@@ -2,6 +2,8 @@ package ru.mondayish.itmo.utils;
 
 import ru.mondayish.itmo.models.CalculationResult;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Arrays;
 
 /**
@@ -9,9 +11,13 @@ import java.util.Arrays;
  */
 public class ConsoleWriter {
 
+    private static final int PLACES_FOR_ROUND = 7;
+
     public static void writeResultsToConsole(CalculationResult calculationResult) {
-        writeln("Вектор неизвестных: " + Arrays.toString(calculationResult.getXVector()));
-        writeln("Вектор погрешностей: " + Arrays.toString(calculationResult.getFaultVector()));
+        writeln("Вектор неизвестных: " +
+                Arrays.toString(Arrays.stream(calculationResult.getXVector()).map(ConsoleWriter::round).toArray()));
+        writeln("Вектор погрешностей: " +
+                Arrays.toString(Arrays.stream(calculationResult.getFaultVector()).map(ConsoleWriter::round).toArray()));
         writeln("Количество итераций: " + calculationResult.getIterationCount());
     }
 
@@ -21,5 +27,11 @@ public class ConsoleWriter {
 
     public static void writeln(String message) {
         System.out.println(message);
+    }
+
+    private static double round(double value) {
+        BigDecimal bd = BigDecimal.valueOf(value);
+        bd = bd.setScale(PLACES_FOR_ROUND, RoundingMode.HALF_UP);
+        return bd.doubleValue();
     }
 }

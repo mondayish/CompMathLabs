@@ -16,6 +16,7 @@ public class MatrixFileReader extends MatrixReader {
 
     public Optional<Matrix> readFromFile(String path) {
         try {
+            System.out.println("Чтение из файла " + path + " ...");
             Scanner scanner = new Scanner(Paths.get(PATH_TO_MATRIX_FILES + path));
             int size = scanner.nextInt();
             return Optional.of(readMatrixFromScanner(scanner, size));
