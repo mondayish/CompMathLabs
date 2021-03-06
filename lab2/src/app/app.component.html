@@ -1,3 +1,76 @@
-<div>
-  Hello
+<div class="container">
+    <div class="row">
+        <div class="col mt-5">
+            <canvas id="canvas" width="500" height="500">{{chart}}</canvas>
+        </div>
+        <div class="col m-4">
+            <div>Выберите метод</div>
+            <div *ngFor="let m of methods" class="m-2">
+                <input name="method" class="mr-2" type="radio" [value]="m" [(ngModel)]="selectedMethod">{{m}}
+            </div>
+
+            <div>Выберите функцию</div>
+            <div *ngFor="let f of functions" class="m-2">
+                <input name="function" class="mr-2" type="radio" [value]="f" [(ngModel)]="selectedFunction">{{f.view}}
+            </div>
+
+            <div>Выберите формат ввода и вывода</div>
+            <div *ngFor="let i of inputTypes" class="m-2">
+                <input name="type" class="mr-2" type="radio" [value]="i" [(ngModel)]="selectedInputType">{{i}}
+            </div>
+
+            <div *ngIf="selectedInputType === inputTypes[1]">
+                <div>Введите границы интервала</div>
+                <div>
+                    От <input type="number" step="0.01" [(ngModel)]="start"> До <input [(ngModel)]="finish" type="number" step="0.01">
+                </div>
+                <div>
+                    <div>Введите начальное приближение</div>
+                    <input type="number" step="0.01" [(ngModel)]="startApproximation">
+                </div>
+                <div>
+                    <div>Введите погрешность</div>
+                    <input type="number" step="0.01" [(ngModel)]="fault">
+                </div>
+            </div>
+
+            <div *ngIf="selectedInputType === inputTypes[0]">
+                <div>Выберите файл со входными данными</div>
+                <input type='file' (change)="onChange($event)"/>
+                <div *ngIf="errorInFile" class="text-danger">Ошибка в файле</div>
+            </div>
+
+            <div *ngIf="calculationErrorMessage" class="text-danger">{{calculationErrorMessage}}</div>
+
+            <div class="m-3">
+                <button (click)="calculate()">Найти корень</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <table *ngIf="chordMethodResult !== undefined" class="text-center" style="width: 1000px">
+            <tr class="m-3 border">
+                <th class="m-3 border">№ итерации</th>
+                <th class="m-3 border">a</th>
+                <th class="m-3 border">b</th>
+                <th class="m-3 border">x</th>
+                <th class="m-3 border">F(a)</th>
+                <th class="m-3 border">F(b)</th>
+                <th class="m-3 border">F(x)</th>
+                <th class="m-3 border">&#916;</th>
+            </tr>
+            <tr *ngFor="let i of iterationArray" class="m-3 border">
+                <td class="m-3 border">{{i}}</td>
+                <td class="m-3 border">{{round(chordMethodResult.aValues[i], 5)}}</td>
+                <td class="m-3 border">{{round(chordMethodResult.bValues[i], 5)}}</td>
+                <td class="m-3 border">{{round(chordMethodResult.xValues[i], 5)}}</td>
+                <td class="m-3 border">{{round(chordMethodResult.funcA[i], 5)}}</td>
+                <td class="m-3 border">{{round(chordMethodResult.funcB[i], 5)}}</td>
+                <td class="m-3 border">{{round(chordMethodResult.funcX[i], 5)}}</td>
+                <td class="m-3 border">{{chordMethodResult.faults[i] === null ? "-" : round(chordMethodResult.faults[i], 6)}}</td>
+            </tr>
+        </table>
+    </div>
 </div>
+
