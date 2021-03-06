@@ -36,7 +36,7 @@
 
             <div *ngIf="selectedInputType === inputTypes[0]">
                 <div>Выберите файл со входными данными</div>
-                <input type='file' (change)="onChange($event)"/>
+                <input type='file' (change)="onChangeFile($event)"/>
                 <div *ngIf="errorInFile" class="text-danger">Ошибка в файле</div>
             </div>
 
@@ -69,6 +69,25 @@
                 <td class="m-3 border">{{round(chordMethodResult.funcB[i], 5)}}</td>
                 <td class="m-3 border">{{round(chordMethodResult.funcX[i], 5)}}</td>
                 <td class="m-3 border">{{chordMethodResult.faults[i] === null ? "-" : round(chordMethodResult.faults[i], 6)}}</td>
+            </tr>
+        </table>
+
+        <table *ngIf="secantMethodResult !== undefined" class="text-center" style="width: 1000px">
+            <tr class="m-3 border">
+                <th class="m-3 border">№ итерации</th>
+                <th class="m-3 border">x<sub>i-1</sub></th>
+                <th class="m-3 border">x<sub>i</sub></th>
+                <th class="m-3 border">x<sub>i+1</sub></th>
+                <th class="m-3 border">F(x<sub>i+1</sub>)</th>
+                <th class="m-3 border">&#916;</th>
+            </tr>
+            <tr *ngFor="let i of iterationArray" class="m-3 border">
+                <td class="m-3 border">{{i}}</td>
+                <td class="m-3 border">{{round(secantMethodResult.prevXValues[i], 5)}}</td>
+                <td class="m-3 border">{{round(secantMethodResult.xValues[i], 5)}}</td>
+                <td class="m-3 border">{{round(secantMethodResult.nextXValues[i], 5)}}</td>
+                <td class="m-3 border">{{round(secantMethodResult.funcXNext[i], 5)}}</td>
+                <td class="m-3 border">{{round(secantMethodResult.faults[i], 6)}}</td>
             </tr>
         </table>
     </div>

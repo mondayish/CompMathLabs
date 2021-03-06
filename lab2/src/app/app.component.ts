@@ -3,6 +3,8 @@ import {Chart} from 'chart.js';
 import {MathFunction} from '../models/MathFunction';
 import {ChordMethod} from '../math/ChordMethod';
 import {ChordMethodResult} from '../models/ChordMethodResult';
+import {SecantMethodResult} from '../models/SecantMethodResult';
+import {SecantMethod} from '../math/SecantMethod';
 
 @Component({
     selector: 'app-root',
@@ -19,13 +21,21 @@ export class AppComponent implements OnInit {
     functions: MathFunction[] = [
         {
             view: 'x^3 - 1.89x^2 - 2x + 1.76', fnc: x => Math.pow(x, 3) - 1.89 * x * x - 2 * x + 1.76,
-            secondDerivative: x => 3 * (2 * x - 63 / 50)
+            derivative: x => 3 * x * x - 3.78 * x - 2, secondDerivative: x => 3 * (2 * x - 63 / 50)
         },
-        {view: '3sin(3x) + 1.5', fnc: x => 3 * Math.sin(3 * x) + 1.5, secondDerivative: x => -27 * Math.sin(3 * x)},
-        {view: 'ln(2.5x) - 3.7', fnc: x => Math.log(2.5 * x) - 3.7, secondDerivative: x => -1 / x / x},
         {
-            view: '-x^5 + 1.8x^4 - 2x^3 + 3x + 6', fnc: x => -Math.pow(x, 5) + 1.8*Math.pow(x, 4) -2 * Math.pow(x, 3) + 3 * x + 6,
-            secondDerivative: x => -20*x*(x*x - 1.08*x + 0.6)
+            view: '3sin(3x) + 1.5', fnc: x => 3 * Math.sin(3 * x) + 1.5,
+            derivative: x => 9 * Math.cos(3 * x), secondDerivative: x => -27 * Math.sin(3 * x)
+        },
+        {
+            view: 'ln(2.5x) - 3.7', fnc: x => Math.log(2.5 * x) - 3.7,
+            derivative: x => 1 / x, secondDerivative: x => -1 / x / x
+        },
+        {
+            view: '-x^5 + 1.8x^4 - 2x^3 + 3x + 6',
+            fnc: x => -Math.pow(x, 5) + 1.8 * Math.pow(x, 4) - 2 * Math.pow(x, 3) + 3 * x + 6,
+            derivative: x => -5 * Math.pow(x, 4) + 7.2 * Math.pow(x, 3) - 6 * x * x + 3,
+            secondDerivative: x => -20 * x * (x * x - 1.08 * x + 0.6)
         }
     ];
     methods: string[] = ['Метод хорд', 'Метод секущих', 'Метод простой итерации'];
@@ -42,6 +52,8 @@ export class AppComponent implements OnInit {
 
     // results
     chordMethodResult: ChordMethodResult;
+    secantMethodResult: SecantMethodResult;
+    simpleIterationMethodResult;
 
     ngOnInit(): void {
         Chart.pluginService.register({
@@ -74,7 +86,7 @@ export class AppComponent implements OnInit {
         });
     }
 
-    onChange(event): void {
+    onChangeFile(event): void {
         let eventObj: MSInputMethodContext = <MSInputMethodContext> event;
         let target: HTMLInputElement = <HTMLInputElement> eventObj.target;
         let files: FileList = target.files;
@@ -98,26 +110,45 @@ export class AppComponent implements OnInit {
     }
 
     calculate() {
+        this.chordMethodResult = undefined;
+        this.secantMethodResult = undefined;
+        this.simpleIterationMethodResult = undefined;
+
         if (this.selectedMethod == this.methods[1]) {
-            // todo check x0
+            if(this.startApproximation !== this.start && this.startApproximation !== this.finish){
+                this.calculationErrorMessage = "Введите начальное приближение (либо начало, либо конец промежутка)";
+                return;
+            } else this.calculationErrorMessage = undefined;
         }
 
         if (!this.errorInFile) {
             if (this.selectedMethod === this.methods[0]) {
-                const methodResult = ChordMethod.calculate(this.selectedFunction, this.start, this.finish, this.fault);
+                const methodResult: ChordMethodResult = ChordMethod.calculate(this.selectedFunction, this.start, this.finish, this.fault);
                 if (methodResult.errorMessage !== undefined) {
                     this.calculationErrorMessage = methodResult.errorMessage;
                 } else {
                     this.calculationErrorMessage = undefined;
                     this.iterationArray = AppComponent.getIterationArray(methodResult.functions.length);
                     this.chordMethodResult = methodResult;
-                    this.drawChart();
+                    this.drawChart(methodResult.functions);
+                }
+            } else if (this.selectedMethod === this.methods[1]){
+                const methodResult: SecantMethodResult = SecantMethod.calculate(this.selectedFunction, this.start, this.finish,
+                    this.startApproximation, this.fault);
+                console.log(methodResult);
+                if (methodResult.errorMessage !== undefined) {
+                    this.calculationErrorMessage = methodResult.errorMessage;
+                } else {
+                    this.calculationErrorMessage = undefined;
+                    this.iterationArray = AppComponent.getIterationArray(methodResult.functions.length);
+                    this.secantMethodResult = methodResult;
+                    this.drawChart(methodResult.functions);
                 }
             }
         }
     }
 
-    private drawChart(): void {
+    private drawChart(functions: ((x: number) => number)[]): void {
         const step = this.round((this.finish - this.start) / 3, 3);
         this.chart = new Chart('canvas', {
                 type: 'line',
@@ -125,7 +156,7 @@ export class AppComponent implements OnInit {
                 height: 500,
                 data: {
                     labels: [this.start - step, this.start, this.start + step, this.start + 2 * step, this.finish, this.finish + step],
-                    datasets: this.chordMethodResult.functions.map(f => {
+                    datasets: functions.map(f => {
                         return {
                             function: f,
                             data: [],

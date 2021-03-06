@@ -1,12 +1,13 @@
 import {MathFunction} from '../models/MathFunction';
 import {ChordMethodResult} from '../models/ChordMethodResult';
+import {VerificationUtils} from '../utils/VerificationUtils';
 
 export class ChordMethod {
 
     static calculate(func: MathFunction, a0: number, b0: number, fault: number): ChordMethodResult {
         let x0: number;
-
-        if(func.fnc(a0)*func.fnc(b0) > 0) return {errorMessage: "На данном промежутке f(x) = 0 не имеет корней или их четное кол-во"};
+        const verificationResult = VerificationUtils.completeVerification(func, a0, b0);
+        if (verificationResult !== undefined) return {errorMessage: verificationResult};
 
         if(func.fnc(a0)*func.secondDerivative(a0) > 0) x0 = a0;
         else if(func.fnc(b0)*func.secondDerivative(b0) > 0) x0 = b0;
@@ -14,8 +15,6 @@ export class ChordMethod {
             // error or ...
             x0 = a0 - (b0 - a0)*func.fnc(a0)/(func.fnc(b0) - func.fnc(a0));
         }
-
-        if(isNaN(func.fnc(a0)) || isNaN(func.fnc(b0)) || !isFinite(func.fnc(a0)) || !isFinite(func.fnc(b0))) return {errorMessage: 'На конце интервала функция не определена'}
 
         const aValues = [], bValues = [], xValues = [], funcA = [], funcB = [], funcX = [], faults = [], functions = [];
         let a = a0, b = b0, x = x0;
@@ -32,6 +31,7 @@ export class ChordMethod {
             if(func.fnc(x)*func.fnc(a) < 0) b = x;
             else a = x;
 
+            // замыкания )0))
             const aCopy = a, bCopy = b;
             functions.push((x: number) => (x - aCopy)*(func.fnc(bCopy) - func.fnc(aCopy))/(bCopy-aCopy) + func.fnc(aCopy));
             const currentFault = xValues.length > 1 ?
