@@ -34,10 +34,10 @@ export class AppComponent implements OnInit {
             derivative: x => 1 / x, secondDerivative: x => -1 / x / x
         },
         {
-            view: '-x^5 + 1.8x^4 - 2x^3 + 3x + 6',
-            fnc: x => -Math.pow(x, 5) + 1.8 * Math.pow(x, 4) - 2 * Math.pow(x, 3) + 3 * x + 6,
-            derivative: x => -5 * Math.pow(x, 4) + 7.2 * Math.pow(x, 3) - 6 * x * x + 3,
-            secondDerivative: x => -20 * x * (x * x - 1.08 * x + 0.6)
+            view: 'x^4 - 5x^3 + 8x^2 - 5x + 1',
+            fnc: x => Math.pow(x, 4) - 5 * Math.pow(x, 3) + 8 * Math.pow(x, 2) - 5*x + 1,
+            derivative: x => 4 * Math.pow(x, 3) -15 * Math.pow(x, 2) +16 * x - 5,
+            secondDerivative: x => 2 *(6*x * x - 15 * x + 8)
         }
     ];
     methods: string[] = ['Метод хорд', 'Метод секущих', 'Метод простой итерации'];
@@ -171,7 +171,7 @@ export class AppComponent implements OnInit {
     private drawChart(functions: ((x: number) => number)[], drawSelected: boolean): void {
         const step = this.round((this.finish - this.start) / 3, 3);
         const colorStep = 255/functions.length;
-        const datasets = functions.map((f,i) => {
+        let datasets = functions.map((f,i) => {
             return {
                 function: f,
                 data: [],
@@ -182,7 +182,7 @@ export class AppComponent implements OnInit {
                 fill: false
             };
         });
-        if(drawSelected) datasets.concat({
+        if(drawSelected) datasets = datasets.concat({
             function: this.selectedFunction.fnc,
             data: [],
             borderColor: 'rgba(0, 0, 0, 1)',

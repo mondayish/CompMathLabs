@@ -10,11 +10,7 @@ export class ChordMethod {
         if (verificationResult !== undefined) return {errorMessage: verificationResult};
 
         if(func.fnc(a0)*func.secondDerivative(a0) > 0) x0 = a0;
-        else if(func.fnc(b0)*func.secondDerivative(b0) > 0) x0 = b0;
-        else {
-            // error or ...
-            x0 = a0 - (b0 - a0)*func.fnc(a0)/(func.fnc(b0) - func.fnc(a0));
-        }
+        else x0 = b0;
 
         const aValues = [], bValues = [], xValues = [], funcA = [], funcB = [], funcX = [], faults = [], functions = [];
         let a = a0, b = b0, x = x0;
@@ -42,5 +38,4 @@ export class ChordMethod {
         return {aValues: aValues, bValues: bValues, xValues: xValues, funcA: funcA, funcB: funcB,
             funcX: funcX, faults: faults, functions: functions};
     }
-
 }
