@@ -5,6 +5,8 @@ import {ChordMethod} from '../math/ChordMethod';
 import {ChordMethodResult} from '../models/ChordMethodResult';
 import {SecantMethodResult} from '../models/SecantMethodResult';
 import {SecantMethod} from '../math/SecantMethod';
+import {SimpleIterationMethodResult} from '../models/SimpleIterationMethodResult';
+import {SimpleIterationMethod} from '../math/SimpleIterationMethod';
 
 @Component({
     selector: 'app-root',
@@ -53,7 +55,7 @@ export class AppComponent implements OnInit {
     // results
     chordMethodResult: ChordMethodResult;
     secantMethodResult: SecantMethodResult;
-    simpleIterationMethodResult;
+    simpleIterationMethodResult: SimpleIterationMethodResult;
 
     ngOnInit(): void {
         Chart.pluginService.register({
@@ -121,6 +123,14 @@ export class AppComponent implements OnInit {
             } else this.calculationErrorMessage = undefined;
         }
 
+        if (this.selectedMethod == this.methods[2]) {
+            if(this.startApproximation === undefined || this.startApproximation < this.start
+                || this.startApproximation > this.finish){
+                this.calculationErrorMessage = "Введите начальное приближение, принадлежащее интервалу";
+                return;
+            } else this.calculationErrorMessage = undefined;
+        }
+
         if (!this.errorInFile) {
             if (this.selectedMethod === this.methods[0]) {
                 const methodResult: ChordMethodResult = ChordMethod.calculate(this.selectedFunction, this.start, this.finish, this.fault);
@@ -130,51 +140,65 @@ export class AppComponent implements OnInit {
                     this.calculationErrorMessage = undefined;
                     this.iterationArray = AppComponent.getIterationArray(methodResult.functions.length);
                     this.chordMethodResult = methodResult;
-                    this.drawChart(methodResult.functions);
+                    this.drawChart(methodResult.functions, true);
                 }
             } else if (this.selectedMethod === this.methods[1]){
                 const methodResult: SecantMethodResult = SecantMethod.calculate(this.selectedFunction, this.start, this.finish,
                     this.startApproximation, this.fault);
-                console.log(methodResult);
                 if (methodResult.errorMessage !== undefined) {
                     this.calculationErrorMessage = methodResult.errorMessage;
                 } else {
                     this.calculationErrorMessage = undefined;
                     this.iterationArray = AppComponent.getIterationArray(methodResult.functions.length);
                     this.secantMethodResult = methodResult;
-                    this.drawChart(methodResult.functions);
+                    this.drawChart(methodResult.functions, true);
+                }
+            } else if (this.selectedMethod === this.methods[2]){
+                const methodResult: SimpleIterationMethodResult = SimpleIterationMethod
+                    .calculate(this.selectedFunction, this.start, this.finish, this.startApproximation, this.fault);
+                if (methodResult.errorMessage !== undefined) {
+                    this.calculationErrorMessage = methodResult.errorMessage;
+                } else {
+                    this.calculationErrorMessage = undefined;
+                    this.iterationArray = AppComponent.getIterationArray(methodResult.xValues.length);
+                    this.simpleIterationMethodResult = methodResult;
+                    this.drawChart(methodResult.functions, false);
                 }
             }
         }
     }
 
-    private drawChart(functions: ((x: number) => number)[]): void {
+    private drawChart(functions: ((x: number) => number)[], drawSelected: boolean): void {
         const step = this.round((this.finish - this.start) / 3, 3);
+        const colorStep = 255/functions.length;
+        const datasets = functions.map((f,i) => {
+            return {
+                function: f,
+                data: [],
+                borderColor: `rgba(${colorStep*i}, 0, 0, 1)`,
+                pointRadius: 1,
+                borderWidth: 1,
+                borderJoinStyle: 'round',
+                fill: false
+            };
+        });
+        if(drawSelected) datasets.concat({
+            function: this.selectedFunction.fnc,
+            data: [],
+            borderColor: 'rgba(0, 0, 0, 1)',
+            borderWidth: 1,
+            pointRadius: 1,
+            borderJoinStyle: 'round',
+            fill: false
+        });
+
         this.chart = new Chart('canvas', {
                 type: 'line',
                 width: 500,
                 height: 500,
                 data: {
                     labels: [this.start - step, this.start, this.start + step, this.start + 2 * step, this.finish, this.finish + step],
-                    datasets: functions.map(f => {
-                        return {
-                            function: f,
-                            data: [],
-                            borderColor: 'rgba(0, 0, 0, 1)',
-                            pointRadius: 1,
-                            borderWidth: 1,
-                            borderJoinStyle: 'round',
-                            fill: false
-                        };
-                    }).concat({
-                        function: this.selectedFunction.fnc,
-                        data: [],
-                        borderColor: 'rgba(0, 0, 0, 1)',
-                        borderWidth: 1,
-                        pointRadius: 1,
-                        borderJoinStyle: 'round',
-                        fill: false
-                    })
+                    datasets: datasets
                 },
                 options: {
                     legend: {

@@ -90,6 +90,25 @@
                 <td class="m-3 border">{{round(secantMethodResult.faults[i], 6)}}</td>
             </tr>
         </table>
+
+        <table *ngIf="simpleIterationMethodResult !== undefined" class="text-center" style="width: 1000px">
+            <tr class="m-3 border">
+                <th class="m-3 border">№ итерации</th>
+                <th class="m-3 border">x<sub>i</sub></th>
+                <th class="m-3 border">x<sub>i+1</sub></th>
+                <th class="m-3 border">&#966;(x<sub>i+1</sub>)</th>
+                <th class="m-3 border">F(x<sub>i+1</sub>)</th>
+                <th class="m-3 border">&#916;</th>
+            </tr>
+            <tr *ngFor="let i of iterationArray" class="m-3 border">
+                <td class="m-3 border">{{i}}</td>
+                <td class="m-3 border">{{round(simpleIterationMethodResult.xValues[i], 5)}}</td>
+                <td class="m-3 border">{{round(simpleIterationMethodResult.nextXValues[i], 5)}}</td>
+                <td class="m-3 border">{{round(simpleIterationMethodResult.xFuncNext[i], 5)}}</td>
+                <td class="m-3 border">{{round(simpleIterationMethodResult.funcNext[i], 5)}}</td>
+                <td class="m-3 border">{{round(simpleIterationMethodResult.faults[i], 6)}}</td>
+            </tr>
+        </table>
     </div>
 </div>
 
