@@ -1,4 +1,4 @@
-package ru.mondayish.itmo.methods
+package ru.mondayish.itmo.math.methods
 
 import ru.mondayish.itmo.models.UserInput
 
