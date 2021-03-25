@@ -8,7 +8,7 @@ export class ChordMethod {
         let x0: number;
         const verificationResult = VerificationUtils.completeVerification(func, a0, b0);
         if (verificationResult !== undefined) return {errorMessage: verificationResult};
-
+        
         if(func.fnc(a0)*func.secondDerivative(a0) > 0) x0 = a0;
         else x0 = b0;
 

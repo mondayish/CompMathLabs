@@ -7,13 +7,15 @@ export class SimpleIterationMethod {
     static calculate(func: MathFunction, a0: number, b0: number, x0: number, fault: number): SimpleIterationMethodResult {
         const verificationResult = VerificationUtils.completeVerification(func, a0, b0);
         if (verificationResult !== undefined) return {errorMessage: verificationResult};
+        if(func.derivative(a0)*func.derivative(b0) < 0)
+             return { errorMessage: 'Производная не сохраняет знак на интервале' };
 
         const lambda = -1/(Math.abs(func.derivative(a0)) > Math.abs(func.derivative(b0)) ? func.derivative(a0) : func.derivative(b0));
         const xFunc = (x: number) => x + lambda*func.fnc(x);
         const xFuncDerivative = (x: number) => 1 + lambda*func.derivative(x);
 
         const q = Math.max(Math.abs(xFuncDerivative(a0)), Math.abs(xFuncDerivative(b0)));
-        if(q > 1) return {errorMessage: "Достаточное условие метода не выполняется"};
+        if(q > 1) return {errorMessage: "Достаточное условие сходимости метода не выполняется"};
         fault = q <= 0.5 ? fault : (1-q)*fault/q;
 
         const xValues = [], nextXValues = [], xFuncNext = [], funcNext = [], faults = [],

@@ -8,8 +8,8 @@ export class SecantMethod {
         const verificationResult = VerificationUtils.completeVerification(func, a0, b0);
         if (verificationResult !== undefined) return {errorMessage: verificationResult};
 
-        if (func.fnc(x0) * func.secondDerivative(x0) < 0)
-            return {errorMessage: 'Начальное приближение выбрано неправильно'};
+        // if (func.fnc(x0) * func.secondDerivative(x0) < 0)
+        //     return {errorMessage: 'Начальное приближение выбрано неправильно'};
 
         const x1 = a0 + (b0 - a0)/2;
         const xValues = [], nextXValues = [], funcXNext = [], prevXValues = [], faults = [], functions = [];
