@@ -7,43 +7,49 @@ import ru.mondayish.itmo.models.*
 
 const val TEST_ACCURACY: Double = 0.01
 const val EXPECTED_RESULT: Double = 8.8333
-val TEST_FUNCTION = MathFunction("x^2 + 3x +2") { x: Double -> x * x + 3 * x + 2 }
+val TEST_FUNCTION = MathFunction("x^2 + 3x +2", { x: Double -> x * x + 3 * x + 2 },
+    { x: Double -> x * x * x / 3 + 1.5 * x * x + 2 * x })
 val TEST_INTERVAL: Interval = Interval(1.0, 2.0)
 
 class IntegralServiceTest {
 
     @Test
-    fun rectangleRightMethodTest(){
+    fun rectangleRightMethodTest() {
         val result: CalculationResult = IntegralService().calculateIntegralWithAccuracy(
-            UserInput(Method.RECTANGLE_RIGHT, TEST_FUNCTION, TEST_INTERVAL, TEST_ACCURACY))
+            UserInput(Method.RECTANGLE_RIGHT, TEST_FUNCTION, TEST_INTERVAL, TEST_ACCURACY)
+        )
         Assert.assertEquals(EXPECTED_RESULT, result.result, TEST_ACCURACY)
     }
 
     @Test
-    fun rectangleLeftMethodTest(){
+    fun rectangleLeftMethodTest() {
         val result: CalculationResult = IntegralService().calculateIntegralWithAccuracy(
-            UserInput(Method.RECTANGLE_LEFT, TEST_FUNCTION, TEST_INTERVAL, TEST_ACCURACY))
+            UserInput(Method.RECTANGLE_LEFT, TEST_FUNCTION, TEST_INTERVAL, TEST_ACCURACY)
+        )
         Assert.assertEquals(EXPECTED_RESULT, result.result, TEST_ACCURACY)
     }
 
     @Test
-    fun rectangleMiddleMethodTest(){
+    fun rectangleMiddleMethodTest() {
         val result: CalculationResult = IntegralService().calculateIntegralWithAccuracy(
-            UserInput(Method.RECTANGLE_MIDDLE, TEST_FUNCTION, TEST_INTERVAL, TEST_ACCURACY))
+            UserInput(Method.RECTANGLE_MIDDLE, TEST_FUNCTION, TEST_INTERVAL, TEST_ACCURACY)
+        )
         Assert.assertEquals(EXPECTED_RESULT, result.result, TEST_ACCURACY)
     }
 
     @Test
-    fun trapeziumMethodTest(){
+    fun trapeziumMethodTest() {
         val result: CalculationResult = IntegralService().calculateIntegralWithAccuracy(
-            UserInput(Method.TRAPEZIUM, TEST_FUNCTION, TEST_INTERVAL, TEST_ACCURACY))
+            UserInput(Method.TRAPEZIUM, TEST_FUNCTION, TEST_INTERVAL, TEST_ACCURACY)
+        )
         Assert.assertEquals(EXPECTED_RESULT, result.result, TEST_ACCURACY)
     }
 
     @Test
-    fun simpsonMethodTest(){
+    fun simpsonMethodTest() {
         val result: CalculationResult = IntegralService().calculateIntegralWithAccuracy(
-            UserInput(Method.SIMPSON, TEST_FUNCTION, TEST_INTERVAL, TEST_ACCURACY))
+            UserInput(Method.SIMPSON, TEST_FUNCTION, TEST_INTERVAL, TEST_ACCURACY)
+        )
         Assert.assertEquals(EXPECTED_RESULT, result.result, TEST_ACCURACY)
     }
 }

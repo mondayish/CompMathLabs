@@ -14,7 +14,7 @@ const val MIN_ACCURACY = 0.0000001
 class ConsoleReader {
 
     fun readUserInput(inputStream: InputStream = System.`in`): UserInput {
-        val scanner: Scanner = Scanner(inputStream)
+        val scanner: Scanner = Scanner(inputStream).useLocale(Locale.US)
 
         println("Доступные методы:")
         Method.values().forEachIndexed {index: Int, method: Method ->  println("${index+1}) ${method.textPresentation}")}
