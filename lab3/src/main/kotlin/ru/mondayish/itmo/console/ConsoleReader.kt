@@ -24,9 +24,13 @@ class ConsoleReader {
         AVAILABLE_FUNCTIONS.forEachIndexed { index: Int, mathFunction: MathFunction -> println("${index + 1}) ${mathFunction.view}") }
         val selectedFunction: MathFunction = AVAILABLE_FUNCTIONS[getNumberInBounds(1.0, AVAILABLE_FUNCTIONS.size.toDouble(), scanner, "Введите номер нужной функции: ").toInt() - 1]
 
-        print("Введите пределы интегрирования: ")
-        val start: Double = scanner.nextDouble()
-        val finish: Double = scanner.nextDouble()
+        var start: Double
+        var finish: Double
+        do {
+            print("Введите пределы интегрирования: ")
+            start = scanner.nextDouble()
+            finish = scanner.nextDouble()
+        } while (start >= finish)
 
         val accuracy: Double = getNumberInBounds(MIN_ACCURACY, MAX_ACCURACY, scanner, "Введите точность: ")
 

@@ -20,13 +20,14 @@ class IntegralService {
         }
 
         var splitNumber: Int = SPLIT_NUMBER
-        var i0: Double; var i1: Double = calculationMethod.calculate(input, splitNumber)
-        do{
+        var i0: Double
+        var i1: Double = calculationMethod.calculate(input, splitNumber)
+        do {
             i0 = i1
-            i1 = calculationMethod.calculate(input, splitNumber*2)
-            splitNumber*=2
-        } while (abs(i0-i1) > input.accuracy)
+            i1 = calculationMethod.calculate(input, splitNumber * 2)
+            splitNumber *= 2
+        } while (abs(i0 - i1) > input.accuracy)
 
-        return CalculationResult(i1, splitNumber, abs(i0-i1))
+        return CalculationResult(i1, splitNumber, abs(i0 - i1))
     }
 }

@@ -8,7 +8,7 @@ import ru.mondayish.itmo.models.*
 const val TEST_ACCURACY: Double = 0.01
 const val EXPECTED_RESULT: Double = 8.8333
 val TEST_FUNCTION = MathFunction("x^2 + 3x +2", { x: Double -> x * x + 3 * x + 2 },
-    { x: Double -> x * x * x / 3 + 1.5 * x * x + 2 * x })
+    { x: Double -> x * x * x / 3 + 1.5 * x * x + 2 * x }, emptyList())
 val TEST_INTERVAL: Interval = Interval(1.0, 2.0)
 
 class IntegralServiceTest {

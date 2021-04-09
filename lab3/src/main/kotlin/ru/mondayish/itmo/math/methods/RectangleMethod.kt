@@ -20,7 +20,8 @@ class RectangleMethod : IntegralCalculationMethod {
             else -> throw IllegalArgumentException()
         }
         for (i in 0 until n) {
-            sum += input.selectedFunction.func(x)
+            val fValue: Double = calculateFunctionValue(h, input, x)
+            sum += fValue
             x += h
         }
         return sum

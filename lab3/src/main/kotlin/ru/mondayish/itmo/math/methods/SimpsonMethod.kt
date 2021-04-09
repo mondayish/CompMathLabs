@@ -14,9 +14,10 @@ class SimpsonMethod : IntegralCalculationMethod {
         var sum: Double = 0.0
         var x: Double = input.interval.start
         for (i in 0..n) {
-            sum += if (i == 0 || i == n) input.selectedFunction.func(x)
-                   else if (i % 2 == 1) 4 * input.selectedFunction.func(x)
-                   else 2 * input.selectedFunction.func(x)
+            val fValue: Double = calculateFunctionValue(h, input, x)
+            sum += if (i == 0 || i == n) fValue
+                   else if (i % 2 == 1) 4 * fValue
+                   else 2 * fValue
             x += h
         }
         return sum
