@@ -1,0 +1,37 @@
+{
+  "version": 1,
+  "projects": {
+    "lab4": {
+      "projectType": "application",
+      "root": "",
+      "sourceRoot": "src",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "dist/lab4",
+            "index": "src/index.html",
+            "main": "src/main.ts",
+            "polyfills": "src/polyfills.ts",
+            "tsConfig": "tsconfig.json",
+            "aot": true,
+            "styles": [
+              "src/styles.css",
+              "node_modules/bootstrap/dist/css/bootstrap.css"
+            ],
+            "scripts": [
+              "node_modules/chart.js/dist/Chart.js"
+            ]
+          }
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "browserTarget": "lab4:build"
+          }
+        }
+      }
+    }
+  },
+  "defaultProject": "lab4"
+}
