@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {Chart} from 'chart.js';
 import {FormArray, FormControl, FormGroup, Validators} from "@angular/forms";
 import {Point} from "../models/Point";
+import {FunctionResearcher} from "../math/research/FunctionResearcher";
 
 @Component({
     selector: 'app-root',
@@ -10,7 +11,7 @@ import {Point} from "../models/Point";
 })
 export class AppComponent implements OnInit {
 
-    private static readonly MIN_POINTS_COUNT = 12;
+    private static readonly MIN_POINTS_COUNT = 7;
     private static readonly MAX_POINTS_COUNT = 20;
 
     chart: any;
@@ -18,7 +19,6 @@ export class AppComponent implements OnInit {
     points: Point[];
     inputTypes: string[] = ['Из файла', 'Из формы'];
     selectedInputType: string = this.inputTypes[1];
-    pointsCount: number = 12;
     pointsForm: FormGroup;
     errorInFile: boolean = false;
 
@@ -122,6 +122,6 @@ export class AppComponent implements OnInit {
                 .map((v, i) => { return {x: xValues.at(i).value, y: yValues.at(i).value} });
         }
 
-        console.log(this.points);
+        console.log(new FunctionResearcher().research(this.points));
     }
 }

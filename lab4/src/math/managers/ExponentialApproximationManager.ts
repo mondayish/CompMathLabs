@@ -1,10 +1,10 @@
-import {ApproximationService} from "./ApproximationService";
-import {Point} from "../models/Point";
-import {ApproximatingFunction} from "../models/ApproximatingFunction";
-import {PointUtils} from "./utils/PointUtils";
-import {MatrixUtils} from "./utils/MatrixUtils";
+import {ApproximationManager} from "./ApproximationManager";
+import {Point} from "../../models/Point";
+import {ApproximatingFunction} from "../../models/ApproximatingFunction";
+import {PointUtils} from "../utils/PointUtils";
+import {MatrixUtils} from "../utils/MatrixUtils";
 
-export class ExponentialApproximationService implements ApproximationService {
+export class ExponentialApproximationManager implements ApproximationManager {
 
     solve(points: Point[]): ApproximatingFunction {
         const replacedPoints: Point[] = points.map((point)=>{return {x: point.x, y: Math.log(point.y)}});

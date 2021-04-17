@@ -1,10 +1,10 @@
-import {ApproximationService} from "./ApproximationService";
-import {ApproximatingFunction} from "../models/ApproximatingFunction";
-import {Point} from "../models/Point";
-import {PointUtils} from "./utils/PointUtils";
-import {MatrixUtils} from "./utils/MatrixUtils";
+import {ApproximationManager} from "./ApproximationManager";
+import {ApproximatingFunction} from "../../models/ApproximatingFunction";
+import {Point} from "../../models/Point";
+import {PointUtils} from "../utils/PointUtils";
+import {MatrixUtils} from "../utils/MatrixUtils";
 
-export class QuadraticApproximationService implements ApproximationService {
+export class QuadraticApproximationManager implements ApproximationManager {
 
     solve(points: Point[]): ApproximatingFunction {
         const characteristics = PointUtils.calculatePointsCharacteristics(points);

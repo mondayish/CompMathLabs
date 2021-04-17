@@ -11,7 +11,7 @@ export class MatrixUtils {
 
         for (let i = 0; i < freeMembers.length; i++) {
             matrix = coeffs;
-            for (let j = 0; i < freeMembers.length; j++) {
+            for (let j = 0; j < freeMembers.length; j++) {
                 matrix[j][i] = freeMembers[j];
             }
             dets.push(math.det(matrix));
