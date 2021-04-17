@@ -24,7 +24,8 @@
     "rxjs": "~6.6.0",
     "tslib": "^2.0.0",
     "zone.js": "~0.10.2",
-    "chart.js": "^2.9.4"
+    "chart.js": "^2.9.4",
+    "mathjs": "^9.3.2"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "~0.1002.0",
