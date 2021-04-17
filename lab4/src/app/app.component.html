@@ -1,1 +1,56 @@
-<div>Hello lab4...</div>
+<div class="text-center h2 mt-3">Аппроксимация функции методом наименьших квадратов</div>
+
+<div class="container">
+    <div class="col mt-3">
+        <canvas id="canvas" width="500" height="500">{{chart}}</canvas>
+    </div>
+
+    <div class="col m-4">
+        <div>Введите точки для аппроксимации функции, кол-во точек должно быть <strong>от 12 до 20</strong></div>
+        <div class="mt-3">Выберите формат ввода и вывода</div>
+        <div *ngFor="let i of inputTypes" class="m-2">
+            <input name="type" class="mr-2" type="radio" [value]="i" [(ngModel)]="selectedInputType">{{i}}
+        </div>
+
+        <div *ngIf="selectedInputType === inputTypes[1]" class="my-3">
+            <form [formGroup]="pointsForm">
+
+                <table>
+                    <tr formArrayName="xValues">
+                        <td><strong>x</strong></td>
+                        <td *ngFor="let x of pointsForm.controls['xValues']['controls']; let i=index">
+                            <input type="number" style="width: 45px" formControlName="{{i}}">
+                        </td>
+                    </tr>
+
+                    <tr formArrayName="yValues">
+                        <td><strong>f(x)</strong></td>
+                        <td *ngFor="let x of pointsForm.controls['yValues']['controls']; let i=index">
+                            <input type="number" style="width: 45px" formControlName="{{i}}">
+                        </td>
+                    </tr>
+                </table>
+
+                <div class="my-3">
+                    <button (click)="addPoint()" class="mr-3" [disabled]="isMaximumPointsArrayLength()">
+                        Добавить точку
+                    </button>
+                    <button (click)="removePoint()" [disabled]="isMinimumPointsArrayLength()">
+                        Удалить точку
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <div *ngIf="selectedInputType === inputTypes[0]" class="my-4">
+            <div>Выберите файл со входными данными</div>
+            <input type='file' (change)="onChangeFile($event)"/>
+            <div *ngIf="errorInFile" class="text-danger">Ошибка в файле</div>
+        </div>
+
+        <div>
+            <button [disabled]="isInvalidInput()" (click)="onSolveClick()">Провести исследование</button>
+        </div>
+
+    </div>
+</div>
