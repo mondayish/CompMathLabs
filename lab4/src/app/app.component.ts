@@ -106,6 +106,7 @@ export class AppComponent implements OnInit {
                 if(xValues.length === yValues.length && xValues.length <= AppComponent.MAX_POINTS_COUNT &&
                     xValues.length >= AppComponent.MIN_POINTS_COUNT){
                     this.points = xValues.map((x, i) => { return {x: x, y: yValues[i]} });
+                    this.errorInFile = false;
                 } else this.errorInFile = true;
             } catch (e) {
                 this.errorInFile = true;
