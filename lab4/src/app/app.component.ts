@@ -3,6 +3,8 @@ import {Chart} from 'chart.js';
 import {FormArray, FormControl, FormGroup, Validators} from "@angular/forms";
 import {Point} from "../models/Point";
 import {FunctionResearcher} from "../math/research/FunctionResearcher";
+import {ResearchResult} from "../models/ResearchResult";
+import {DomSanitizer, SafeUrl} from "@angular/platform-browser";
 
 @Component({
     selector: 'app-root',
@@ -16,11 +18,16 @@ export class AppComponent implements OnInit {
 
     chart: any;
     file: File;
+    hrefToResult: string;
+    result: ResearchResult[];
     points: Point[];
     inputTypes: string[] = ['Из файла', 'Из формы'];
     selectedInputType: string = this.inputTypes[1];
     pointsForm: FormGroup;
     errorInFile: boolean = false;
+
+    constructor(private sanitizer: DomSanitizer) {
+    }
 
     ngOnInit(): void {
         this.initializeForm();
@@ -90,7 +97,7 @@ export class AppComponent implements OnInit {
 
     isInvalidInput(): boolean {
         return this.selectedInputType === this.inputTypes[1] && this.pointsForm.invalid ||
-        this.selectedInputType === this.inputTypes[0] && this.errorInFile;
+        this.selectedInputType === this.inputTypes[0] && (this.errorInFile || this.points === undefined);
     }
 
     onChangeFile(event): void {
@@ -123,6 +130,20 @@ export class AppComponent implements OnInit {
                 .map((v, i) => { return {x: xValues.at(i).value, y: yValues.at(i).value} });
         }
 
-        console.log(new FunctionResearcher().research(this.points));
+        this.result = new FunctionResearcher().research(this.points);
+        console.log(this.result);
+
+        if(this.selectedInputType === this.inputTypes[0]) {
+            const jsonData = JSON.stringify(this.result);
+            this.hrefToResult = "data:application/json;charset=UTF-8," + encodeURIComponent(jsonData);
+        }
+    }
+
+    sanitize(url: string): SafeUrl {
+        return this.sanitizer.bypassSecurityTrustUrl(url);
+    }
+
+    drawPlots(){
+
     }
 }

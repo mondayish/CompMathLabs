@@ -52,5 +52,31 @@
             <button [disabled]="isInvalidInput()" (click)="onSolveClick()">Провести исследование</button>
         </div>
 
+        <table *ngIf="selectedInputType === inputTypes[1] && result !== undefined" class="text-center my-3"
+               style="width: 1000px">
+            <tr class="m-3 border">
+                <th class="m-3 border">Цвет</th>
+                <th class="m-3 border">Вид функции</th>
+                <th class="m-3 border">a</th>
+                <th class="m-3 border">b</th>
+                <th class="m-3 border">c</th>
+                <th class="m-3 border">Мера отклонения S</th>
+                <th class="m-3 border">Среднеквадратичное отклонение &#948;</th>
+            </tr>
+            <tr *ngFor="let f of result" class="m-3 border">
+                <td class="m-3 border">кек</td>
+                <td class="m-3 border">&#632;(x) = {{f.view}}</td>
+                <td class="m-3 border">{{f.a}}</td>
+                <td class="m-3 border">{{f.b}}</td>
+                <td class="m-3 border">{{f.c === undefined ? '-' : f.c}}</td>
+                <td class="m-3 border">{{f.deviationMeasure}}</td>
+                <td class="m-3 border">{{f.standardDeviation}}</td>
+            </tr>
+        </table>
+
+        <div class="my-3 h5" *ngIf="selectedInputType === inputTypes[0] && hrefToResult !== undefined">
+            <a [href]="sanitize(hrefToResult)">Результат</a>
+        </div>
+
     </div>
 </div>
