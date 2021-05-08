@@ -1,30 +1,24 @@
-import * as math from "mathjs";
-import {PointsCharacteristics} from "../../models/PointsCharacteristics";
+import * as math from 'mathjs';
 
 export class MatrixUtils {
 
-    static solveLinear(characteristics: PointsCharacteristics): number[] {
-        const det: number = math.det([[characteristics.sxx, characteristics.sx], [characteristics.sx, characteristics.n]]);
-        const det1: number = math.det([[characteristics.sxy, characteristics.sx], [characteristics.sy, characteristics.n]]);
-        const det2: number = math.det([[characteristics.sxx, characteristics.sxy], [characteristics.sx, characteristics.sy]]);
+    static solveSLAU(coeffs: number[][], freeMembers: number[]): number[] {
+        if (coeffs === undefined ||
+            freeMembers === undefined
+            || coeffs.length !== freeMembers.length) {
+            return undefined;
+        }
 
-        return [det1/det, det2/det];
-    }
+        const det: number = math.det(coeffs);
+        const dets: number[] = [];
 
-    static solveQuadratic(characteristics: PointsCharacteristics){
-        const det: number = math.det([[characteristics.n, characteristics.sx, characteristics.sxx],
-            [characteristics.sx, characteristics.sxx, characteristics.sxxx],
-            [characteristics.sxx, characteristics.sxxx, characteristics.sxxxx]]);
-        const det1: number = math.det([[characteristics.sy, characteristics.sx, characteristics.sxx],
-            [characteristics.sxy, characteristics.sxx, characteristics.sxxx],
-            [characteristics.sxxy, characteristics.sxxx, characteristics.sxxxx]]);
-        const det2: number = math.det([[characteristics.n, characteristics.sy, characteristics.sxx],
-            [characteristics.sx, characteristics.sxy, characteristics.sxxx],
-            [characteristics.sxx, characteristics.sxxy, characteristics.sxxxx]]);
-        const det3: number = math.det([[characteristics.n, characteristics.sx, characteristics.sy],
-            [characteristics.sx, characteristics.sxx, characteristics.sxy],
-            [characteristics.sxx, characteristics.sxxx, characteristics.sxxy]]);
-
-        return [det1/det, det2/det, det3/det];
+        for (let i = 0; i < freeMembers.length; i++) {
+            const matrix = coeffs.map(arr => arr.slice());
+            for (let j = 0; j < freeMembers.length; j++) {
+                matrix[j][i] = freeMembers[j];
+            }
+            dets.push(math.det(matrix));
+        }
+        return Array(freeMembers.length).fill(0).map((v, i) => dets[i] / det);
     }
 }

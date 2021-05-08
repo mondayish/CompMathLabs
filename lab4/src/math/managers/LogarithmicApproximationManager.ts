@@ -9,7 +9,8 @@ export class LogarithmicApproximationManager implements ApproximationManager {
     solve(points: Point[]): ApproximatingFunction {
         const replacedPoints: Point[] = points.map((point)=>{return {x: Math.log(point.x), y: point.y}});
         const characteristics = PointUtils.calculatePointsCharacteristics(replacedPoints);
-        const coeffs: number[] = MatrixUtils.solveLinear(characteristics);
+        const coeffs: number[] = MatrixUtils.solveSLAU([[characteristics.sxx, characteristics.sx],
+            [characteristics.sx, characteristics.n]], [characteristics.sxy, characteristics.sy]);
         const a: number = coeffs[0], b: number = coeffs[1];
 
         return {fnc: (x: number) => a*Math.log(x) + b, a: a, b: b};

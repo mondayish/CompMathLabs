@@ -3,8 +3,9 @@ import {Chart} from 'chart.js';
 import {FormArray, FormControl, FormGroup, Validators} from "@angular/forms";
 import {Point} from "../models/Point";
 import {FunctionResearcher} from "../math/research/FunctionResearcher";
-import {ResearchResult} from "../models/ResearchResult";
 import {DomSanitizer, SafeUrl} from "@angular/platform-browser";
+import {FinalResult} from "../models/FinalResult";
+import {MathUtils} from "../math/utils/MathUtils";
 
 @Component({
     selector: 'app-root',
@@ -13,13 +14,14 @@ import {DomSanitizer, SafeUrl} from "@angular/platform-browser";
 })
 export class AppComponent implements OnInit {
 
-    private static readonly MIN_POINTS_COUNT = 7;
-    private static readonly MAX_POINTS_COUNT = 20;
+    readonly MIN_POINTS_COUNT = 7;
+    readonly MAX_POINTS_COUNT = 20;
 
     chart: any;
     file: File;
     hrefToResult: string;
-    result: ResearchResult[];
+    result: FinalResult;
+    bestStandDev: number;
     points: Point[];
     inputTypes: string[] = ['Из файла', 'Из формы'];
     selectedInputType: string = this.inputTypes[1];
@@ -33,21 +35,13 @@ export class AppComponent implements OnInit {
         this.initializeForm();
 
         Chart.pluginService.register({
-            beforeInit: function (chart) {
-                // We get the chart data
+            beforeInit(chart): void {
                 const data = chart.config.data;
-
-                // For every dataset ...
                 for (let i = 0; i < data.datasets.length; i++) {
-
-                    // For every label ...
                     for (let j = 0; j < data.labels.length; j++) {
-
-                        // We get the dataset's function and calculate the value
-                        const fct = data.datasets[i].function,
-                            x = data.labels[j],
-                            y = fct(x);
-                        // Then we add the value to the dataset data
+                        const fct = data.datasets[i].function;
+                        const x = data.labels[j];
+                        const y = fct(x, data.datasets[i].a, data.datasets[i].b, data.datasets[i].c);
                         data.datasets[i].data.push(y);
                     }
                 }
@@ -62,8 +56,8 @@ export class AppComponent implements OnInit {
     }
 
     private initializeForm(): void {
-        const xValues = new FormArray(Array(AppComponent.MIN_POINTS_COUNT).fill(0).map(() => new FormControl("", Validators.required)));
-        const yValues = new FormArray(Array(AppComponent.MIN_POINTS_COUNT).fill(0).map(() => new FormControl("", Validators.required)));
+        const xValues = new FormArray(Array(this.MIN_POINTS_COUNT).fill(0).map(() => new FormControl("", Validators.required)));
+        const yValues = new FormArray(Array(this.MIN_POINTS_COUNT).fill(0).map(() => new FormControl("", Validators.required)));
 
         this.pointsForm = new FormGroup({
             "xValues": xValues,
@@ -88,21 +82,21 @@ export class AppComponent implements OnInit {
     }
 
     isMaximumPointsArrayLength(): boolean {
-        return this.getPointsArrayLength() === AppComponent.MAX_POINTS_COUNT;
+        return this.getPointsArrayLength() === this.MAX_POINTS_COUNT;
     }
 
     isMinimumPointsArrayLength(): boolean {
-        return this.getPointsArrayLength() === AppComponent.MIN_POINTS_COUNT;
+        return this.getPointsArrayLength() === this.MIN_POINTS_COUNT;
     }
 
     isInvalidInput(): boolean {
         return this.selectedInputType === this.inputTypes[1] && this.pointsForm.invalid ||
-        this.selectedInputType === this.inputTypes[0] && (this.errorInFile || this.points === undefined);
+            this.selectedInputType === this.inputTypes[0] && (this.errorInFile || this.points === undefined);
     }
 
     onChangeFile(event): void {
-        let eventObj: MSInputMethodContext = <MSInputMethodContext> event;
-        let target: HTMLInputElement = <HTMLInputElement> eventObj.target;
+        let eventObj: MSInputMethodContext = <MSInputMethodContext>event;
+        let target: HTMLInputElement = <HTMLInputElement>eventObj.target;
         let files: FileList = target.files;
         this.file = files[0];
         this.file.text().then((result) => {
@@ -110,9 +104,11 @@ export class AppComponent implements OnInit {
                 const params = JSON.parse(result);
                 const xValues: number[] = params.xValues.filter((x) => !isNaN(parseFloat(x)));
                 const yValues: number[] = params.yValues.filter((y) => !isNaN(parseFloat(y)));
-                if(xValues.length === yValues.length && xValues.length <= AppComponent.MAX_POINTS_COUNT &&
-                    xValues.length >= AppComponent.MIN_POINTS_COUNT){
-                    this.points = xValues.map((x, i) => { return {x: x, y: yValues[i]} });
+                if (xValues.length === yValues.length && xValues.length <= this.MAX_POINTS_COUNT &&
+                    xValues.length >= this.MIN_POINTS_COUNT) {
+                    this.points = xValues.map((x, i) => {
+                        return {x: x, y: yValues[i]}
+                    });
                     this.errorInFile = false;
                 } else this.errorInFile = true;
             } catch (e) {
@@ -123,19 +119,26 @@ export class AppComponent implements OnInit {
 
 
     onSolveClick(): void {
-        if(this.selectedInputType === this.inputTypes[1]){
+        if (this.selectedInputType === this.inputTypes[1]) {
             const xValues: FormArray = <FormArray>this.pointsForm.controls["xValues"];
             const yValues: FormArray = <FormArray>this.pointsForm.controls["yValues"];
             this.points = Array(xValues.length).fill(0)
-                .map((v, i) => { return {x: xValues.at(i).value, y: yValues.at(i).value} });
+                .map((v, i) => {
+                    return {x: xValues.at(i).value, y: yValues.at(i).value}
+                });
         }
 
         this.result = new FunctionResearcher().research(this.points);
+        this.selectBestApproximation();
+        this.drawPlots();
+
         console.log(this.result);
 
-        if(this.selectedInputType === this.inputTypes[0]) {
+        if (this.selectedInputType === this.inputTypes[0]) {
             const jsonData = JSON.stringify(this.result);
             this.hrefToResult = "data:application/json;charset=UTF-8," + encodeURIComponent(jsonData);
+        } else {
+
         }
     }
 
@@ -143,7 +146,54 @@ export class AppComponent implements OnInit {
         return this.sanitizer.bypassSecurityTrustUrl(url);
     }
 
-    drawPlots(){
+    drawPlots(): void {
+        const xValues = this.points.map(p => p.x);
+        const min = Math.min(...xValues);
+        const max = Math.max(...xValues);
+        const step = (max - min) / this.points.length;
+        const labels = [MathUtils.roundToFixed(min - step, 2)].concat(xValues)
+            .concat([MathUtils.roundToFixed(max + step, 2)])
 
+        const data = {
+            labels: labels,
+            datasets: this.result.functions.map(f => {
+                return {
+                    label: f.view,
+                    function: f.fnc,
+                    a: f.a,
+                    b: f.b,
+                    c: f.c,
+                    data: [],
+                    borderColor: f.color,
+                    fill: false
+                };
+            })
+        };
+
+        this.chart = new Chart('canvas', {
+            type: 'line',
+            data: data,
+            options: {
+                legend: {
+                    display: true
+                },
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
+                }
+            }
+        });
+    }
+
+    handleNumber(x: number): string {
+        return x === undefined || isNaN(x) || x === null ? '-' : x.toString();
+    }
+
+    private selectBestApproximation(): void {
+        this.bestStandDev = Math.min(...this.result.functions.map(f => f.standardDeviation)
+            .filter(x => !isNaN(x) && x !== undefined && x !== null));
     }
 }
