@@ -14,7 +14,7 @@ import {MathUtils} from "../math/utils/MathUtils";
 })
 export class AppComponent implements OnInit {
 
-    readonly MIN_POINTS_COUNT = 7;
+    readonly MIN_POINTS_COUNT = 12;
     readonly MAX_POINTS_COUNT = 20;
 
     chart: any;

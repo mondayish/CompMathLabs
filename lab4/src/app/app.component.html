@@ -16,7 +16,7 @@
         <div *ngIf="selectedInputType === inputTypes[1]" class="my-3">
             <form [formGroup]="pointsForm">
 
-                <table>
+                <table id="pointsTable">
                     <tr formArrayName="xValues">
                         <td><strong>x</strong></td>
                         <td *ngFor="let x of pointsForm.controls['xValues']['controls']; let i=index">
@@ -33,10 +33,10 @@
                 </table>
 
                 <div class="my-3">
-                    <button (click)="addPoint()" class="mr-3" [disabled]="isMaximumPointsArrayLength()">
+                    <button (click)="addPoint()" class="mr-3 btn btn-success" [disabled]="isMaximumPointsArrayLength()">
                         Добавить точку
                     </button>
-                    <button (click)="removePoint()" [disabled]="isMinimumPointsArrayLength()">
+                    <button (click)="removePoint()" class="btn btn-danger" [disabled]="isMinimumPointsArrayLength()">
                         Удалить точку
                     </button>
                 </div>
@@ -50,7 +50,7 @@
         </div>
 
         <div>
-            <button [disabled]="isInvalidInput()" (click)="onSolveClick()">Провести исследование</button>
+            <button class="btn btn-primary" [disabled]="isInvalidInput()" (click)="onSolveClick()">Провести исследование</button>
         </div>
 
         <table *ngIf="selectedInputType === inputTypes[1] && result !== undefined" class="text-center my-3"

@@ -3,3 +3,8 @@ input::-webkit-inner-spin-button {
     -webkit-appearance: none;
     margin: 0;
 }
+
+#pointsTable {
+    border-collapse: separate;
+    border-spacing:0 5px;
+}
