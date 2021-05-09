@@ -3,9 +3,9 @@ import {Chart} from 'chart.js';
 import {FormArray, FormControl, FormGroup, Validators} from "@angular/forms";
 import {Point} from "../models/Point";
 import {MathFunction} from "../models/MathFunction";
-// import {FunctionResearcher} from "../math/research/FunctionResearcher";
-// import {FinalResult} from "../models/FinalResult";
-// import {MathUtils} from "../math/utils/MathUtils";
+import {NewtonInterpolationCalculator} from "../math/NewtonInterpolationCalculator";
+import {InterpolationResult} from "../models/InterpolationResult";
+import {LagrangeInterpolationCalculator} from "../math/LagrangeInterpolationCalculator";
 
 @Component({
     selector: 'app-root',
@@ -14,11 +14,11 @@ import {MathFunction} from "../models/MathFunction";
 })
 export class AppComponent implements OnInit {
 
-    readonly MIN_POINTS_COUNT = 7;
+    readonly MIN_POINTS_COUNT = 5;
     readonly MAX_POINTS_COUNT = 20;
 
     chart: any;
-    // result: FinalResult;
+    result: InterpolationResult;
     points: Point[];
     functions: MathFunction[] = [
         {view: 'y = sin(x)', fnc: x => Math.sin(x), derivative: x => Math.cos(x)},
@@ -100,6 +100,12 @@ export class AppComponent implements OnInit {
 
     onSolveClick(): void {
         this.collectPointsFromForm();
+
+        this.result = this.selectedMethod === this.methods[0] ?
+            new LagrangeInterpolationCalculator().calculate(this.points, this.xToSolve) :
+            new NewtonInterpolationCalculator().calculate(this.points, this.xToSolve);
+
+        console.log(this.result);
 
         // this.result = new FunctionResearcher().research(this.points);
         // this.selectBestApproximation();
