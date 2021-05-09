@@ -2,5 +2,4 @@
 /lab1/target/
 /*/*.iml
 .idea
-/lab2/node_modules
-/lab4/node_modules
+/lab*/node_modules
