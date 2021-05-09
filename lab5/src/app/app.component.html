@@ -31,6 +31,11 @@
                         </td>
                     </tr>
                 </table>
+
+                <div class="mt-3">
+                    Введите значение X для интерполяции
+                    <input type="number" style="width: 55px" formControlName="xToSolve" name="xToSolve" [(ngModel)]="xToSolve">
+                </div>
             </form>
         </div>
 
@@ -50,6 +55,11 @@
                         </td>
                     </tr>
                 </table>
+
+                <div class="mt-3">
+                    Введите значение X для интерполяции
+                    <input type="number" style="width: 55px" formControlName="xToSolve" name="xToSolve" [(ngModel)]="xToSolve">
+                </div>
             </form>
         </div>
 
@@ -57,7 +67,6 @@
         <div *ngFor="let m of methods" class="m-2">
             <input name="method" class="mr-2" type="radio" [value]="m" [(ngModel)]="selectedMethod">{{m}}
         </div>
-
 
         <div class="my-3">
             <button (click)="addPoint()" class="mr-3 btn btn-success" [disabled]="isMaximumPointsArrayLength()">

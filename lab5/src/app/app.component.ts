@@ -30,7 +30,7 @@ export class AppComponent implements OnInit {
     methods: string[] = ['Многочлен Лагранжа', 'Многочлен Ньютона с раделенными разностями'];
     selectedInputType: string = this.inputTypes[1];
     selectedMethod: string = this.methods[0];
-
+    xToSolve: number;
     pointsForm: FormGroup;
 
     ngOnInit(): void {
@@ -63,7 +63,8 @@ export class AppComponent implements OnInit {
 
         this.pointsForm = new FormGroup({
             "xValues": xValues,
-            "yValues": yValues
+            "yValues": yValues,
+            "xToSolve": new FormControl("", Validators.required)
         });
     }
 
@@ -93,7 +94,8 @@ export class AppComponent implements OnInit {
 
     isInvalidInput(): boolean {
         return this.selectedInputType === this.inputTypes[1] && this.pointsForm.invalid ||
-            this.selectedInputType === this.inputTypes[0] && this.pointsForm.controls["xValues"].invalid;
+            this.selectedInputType === this.inputTypes[0] &&
+            (this.pointsForm.controls["xValues"].invalid || this.pointsForm.controls["xToSolve"].invalid);
     }
 
     onSolveClick(): void {
