@@ -1,3 +1,3 @@
 export interface InterpolationResult {
-    y: number
+    y: number;
 }

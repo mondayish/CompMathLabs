@@ -6,6 +6,7 @@ import {MathFunction} from "../models/MathFunction";
 import {NewtonInterpolationCalculator} from "../math/NewtonInterpolationCalculator";
 import {InterpolationResult} from "../models/InterpolationResult";
 import {LagrangeInterpolationCalculator} from "../math/LagrangeInterpolationCalculator";
+import {MathUtils} from "../utils/MathUtils";
 
 @Component({
     selector: 'app-root',
@@ -18,12 +19,12 @@ export class AppComponent implements OnInit {
     readonly MAX_POINTS_COUNT = 20;
 
     chart: any;
-    result: InterpolationResult;
+    result: number;
     points: Point[];
     functions: MathFunction[] = [
-        {view: 'y = sin(x)', fnc: x => Math.sin(x), derivative: x => Math.cos(x)},
-        {view: 'y = e^x', fnc: x => Math.exp(x), derivative: x => Math.exp(x)},
-        {view: 'y = x^3', fnc: x => Math.pow(x, 3), derivative: x => 3 * x * x}
+        {view: 'y = sin(x)', fnc: x => Math.sin(x)},
+        {view: 'y = e^x', fnc: x => Math.exp(x)},
+        {view: 'y = x^3', fnc: x => Math.pow(x, 3)}
     ];
     selectedFunction: MathFunction = this.functions[0];
     inputTypes: string[] = ['На основе функции', 'Таблица значений'];
@@ -41,10 +42,12 @@ export class AppComponent implements OnInit {
                 const data = chart.config.data;
                 for (let i = 0; i < data.datasets.length; i++) {
                     for (let j = 0; j < data.labels.length; j++) {
-                        const fct = data.datasets[i].function;
-                        const x = data.labels[j];
-                        const y = fct(x, data.datasets[i].a, data.datasets[i].b, data.datasets[i].c);
-                        data.datasets[i].data.push(y);
+                        if (data.datasets[i].data.length === 0) {
+                            const fct = data.datasets[i].function;
+                            const x = data.labels[j];
+                            const y = fct(x, data.datasets[i].a, data.datasets[i].b, data.datasets[i].c);
+                            data.datasets[i].data.push(y);
+                        }
                     }
                 }
             }
@@ -100,17 +103,16 @@ export class AppComponent implements OnInit {
 
     onSolveClick(): void {
         this.collectPointsFromForm();
+        LagrangeInterpolationCalculator.POINTS = this.points;
+        NewtonInterpolationCalculator.POINTS = this.points;
 
         this.result = this.selectedMethod === this.methods[0] ?
-            new LagrangeInterpolationCalculator().calculate(this.points, this.xToSolve) :
-            new NewtonInterpolationCalculator().calculate(this.points, this.xToSolve);
+            new LagrangeInterpolationCalculator().calculateYValue(this.xToSolve) :
+            new NewtonInterpolationCalculator().calculateYValue(this.xToSolve);
 
         console.log(this.result);
 
-        // this.result = new FunctionResearcher().research(this.points);
-        // this.selectBestApproximation();
-        // this.drawPlots();
-        // console.log(this.result);
+        this.drawPlots();
 
         if (this.selectedInputType === this.inputTypes[0]) {
 
@@ -120,45 +122,53 @@ export class AppComponent implements OnInit {
     }
 
     drawPlots(): void {
-        // const xValues = this.points.map(p => p.x);
-        // const min = Math.min(...xValues);
-        // const max = Math.max(...xValues);
-        // const step = (max - min) / this.points.length;
-        // const labels = [MathUtils.roundToFixed(min - step, 2)].concat(xValues)
-        //     .concat([MathUtils.roundToFixed(max + step, 2)])
-        //
-        // const data = {
-        //   labels: labels,
-        //   datasets: this.result.functions.map(f => {
-        //     return {
-        //       label: f.view,
-        //       function: f.fnc,
-        //       a: f.a,
-        //       b: f.b,
-        //       c: f.c,
-        //       data: [],
-        //       borderColor: f.color,
-        //       fill: false
-        //     };
-        //   })
-        // };
-        //
-        // this.chart = new Chart('canvas', {
-        //   type: 'line',
-        //   data: data,
-        //   options: {
-        //     legend: {
-        //       display: true
-        //     },
-        //     scales: {
-        //       yAxes: [{
-        //         ticks: {
-        //           beginAtZero: true
-        //         }
-        //       }]
-        //     }
-        //   }
-        // });
+        const xValues = this.points.map(p => p.x);
+        const yValues = this.points.map(p => p.y);
+
+        let datasets = [{label: "Real", data: yValues, borderColor: "green", fill: false},
+            this.selectedMethod === this.methods[0] ?
+                {
+                    label: "Lagrange",
+                    data: [],
+                    borderColor: "red",
+                    fill: false,
+                    function: new LagrangeInterpolationCalculator().calculateYValue
+                } :
+                {
+                    label: "Newton",
+                    data: [],
+                    borderColor: "red",
+                    fill: false,
+                    function: new NewtonInterpolationCalculator().calculateYValue
+                }
+        ];
+        datasets = this.selectedInputType === this.inputTypes[0] ? datasets.concat({
+            label: this.selectedFunction.view,
+            data: [],
+            borderColor: "blue",
+            fill: false,
+            function: this.selectedFunction.fnc
+        }) : datasets;
+
+        this.chart = new Chart('canvas', {
+            type: 'line',
+            data: {
+                labels: xValues,
+                datasets: datasets
+            },
+            options: {
+                legend: {
+                    display: true
+                },
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
+                }
+            }
+        });
     }
 
     handleNumber(x: number): string {

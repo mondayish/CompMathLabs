@@ -1,15 +1,14 @@
-import {InterpolationCalculator} from "./InterpolationCalculator";
 import {Point} from "../models/Point";
-import {InterpolationResult} from "../models/InterpolationResult";
 
-export class LagrangeInterpolationCalculator implements InterpolationCalculator {
+export class LagrangeInterpolationCalculator {
 
-    calculate(points: Point[], x: number): InterpolationResult {
-        const lCoeffs: number[] = points.map((p, i) => {
-            const filteredPoints: Point[] = points.filter((point, index) => index != i);
+    public static POINTS: Point[];
+
+    calculateYValue(x: number): number {
+        return LagrangeInterpolationCalculator.POINTS.map((p, i) => {
+            const filteredPoints: Point[] = LagrangeInterpolationCalculator.POINTS.filter((point, index) => index != i);
             return p.y * filteredPoints.map(point => x - point.x).reduce((a, b) => a * b) /
                 filteredPoints.map(point => p.x - point.x).reduce((a, b) => a * b);
-        });
-        return {y: lCoeffs.reduce((a, b) => a+b)};
+        }).reduce((a, b) => a + b);
     }
 }
