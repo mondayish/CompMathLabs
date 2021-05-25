@@ -1,15 +1,16 @@
 package ru.mondayish.input
 
+import ru.mondayish.MAX_POINTS_NUMBER
+import ru.mondayish.MIN_POINTS_NUMBER
+import ru.mondayish.exceptions.InputException
 import ru.mondayish.functions
+import ru.mondayish.models.Input
 import ru.mondayish.models.Point
 import java.util.*
 
-private const val MAX_POINTS_NUMBER: Int = 20
-private const val MIN_POINTS_NUMBER: Int = 5
-
 class ConsoleReader : PointReader {
 
-    override fun readPoints(): Array<Point> {
+    override fun readPoints(): Input {
         val inputType: Int = getAvailableVariant(IntArray(2) {it+1}, "Выберите формат ввода:\n1 - Таблица значений\n2 - На основе функции")
         val pointsCount: Int = getAvailableVariant(IntArray(MAX_POINTS_NUMBER - MIN_POINTS_NUMBER + 1) {it+MIN_POINTS_NUMBER},
             "Введите кол-во точек([$MIN_POINTS_NUMBER - $MAX_POINTS_NUMBER]):")
@@ -26,11 +27,21 @@ class ConsoleReader : PointReader {
             yValues = getDoubleArray("Введите значения Y:")
         }
 
+        if(xValues.size != pointsCount || yValues.size != pointsCount) throw InputException(message = "Некорректный ввод!!!")
+
         val method: Int = getAvailableVariant(
             IntArray(2) {it+1},
             "Выберите метод:\n1 - Многочлен Лагранжа\n2 - Многочлен Ньютона с разделенными разностями")
+        val xToSolve: Double = getDoubleValue("Введите X для расчета:")
 
-        return Array(pointsCount) { Point(xValues[it], yValues[it]) }
+        val points: Array<Point> = Array(pointsCount) { Point(xValues[it], yValues[it]) }
+        return Input(inputType, pointsCount, points, method, xToSolve)
+    }
+
+    private fun getDoubleValue(message: String): Double {
+        val scanner = Scanner(System.`in`)
+        println(message)
+        return scanner.nextDouble()
     }
 
     private fun getAvailableVariant(variants: IntArray, message: String): Int {

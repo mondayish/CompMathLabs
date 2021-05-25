@@ -1,8 +1,8 @@
 package ru.mondayish.input
 
-import ru.mondayish.models.Point
+import ru.mondayish.models.Input
 
 interface PointReader {
 
-    fun readPoints(): Array<Point>
+    fun readPoints(): Input
 }
