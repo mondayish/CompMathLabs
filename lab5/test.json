@@ -1,8 +1,8 @@
 {
-  "inputType": 2,
-  "pointsCount": 5,
-  "xValues": [0.1, 2.22, 7.33, 2.42, 10.5],
+  "inputType": 1,
+  "pointsCount": 7,
+  "xValues": [1.05, 1.15, 1.25, 1.35, 1.45, 1.55, 1.65],
   "method": 1,
-  "funcNumber": 2,
-  "xToSolve": 0.35
+  "yValues": [0.1213, 1.1316, 2.1459, 3.1565, 4.1571, 5.1819, 6.1969],
+  "xToSolve": 1.1
 }
