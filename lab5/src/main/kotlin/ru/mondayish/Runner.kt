@@ -2,6 +2,7 @@ package ru.mondayish
 
 import ru.mondayish.input.ConsoleReader
 import ru.mondayish.input.FileReader
+import ru.mondayish.math.FaultCalculator
 import ru.mondayish.math.LagrangeMethod
 import ru.mondayish.math.NewtonMethod
 import ru.mondayish.models.Input
@@ -34,6 +35,7 @@ fun main(args: Array<String>) {
 
     println("============================")
     println("Результат: ${round(result)}")
+    if(input.inputType == 2) println("Погрешность Rn(x) <= ${round(FaultCalculator().calculate(input))}")
 }
 
 
