@@ -1,6 +1,6 @@
 package ru.mondayish.math
 
-import ru.mondayish.functions
+import ru.mondayish.math.CommonUtils.Companion.functions
 import ru.mondayish.models.Input
 import kotlin.math.abs
 

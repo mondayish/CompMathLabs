@@ -1,9 +1,9 @@
 package ru.mondayish.input
 
-import ru.mondayish.MAX_POINTS_NUMBER
-import ru.mondayish.MIN_POINTS_NUMBER
 import ru.mondayish.exceptions.InputException
-import ru.mondayish.functions
+import ru.mondayish.math.CommonUtils.Companion.MAX_POINTS_NUMBER
+import ru.mondayish.math.CommonUtils.Companion.MIN_POINTS_NUMBER
+import ru.mondayish.math.CommonUtils.Companion.functions
 import ru.mondayish.models.Input
 import ru.mondayish.models.Point
 import java.util.*

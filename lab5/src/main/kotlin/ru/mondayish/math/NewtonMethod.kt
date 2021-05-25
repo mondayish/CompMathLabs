@@ -2,9 +2,9 @@ package ru.mondayish.math
 
 import ru.mondayish.models.Point
 
-class NewtonMethod {
+class NewtonMethod : InterpolationMethod {
 
-    fun calculate(points: Array<Point>, x: Double): Double {
+    override fun calculate(points: Array<Point>, x: Double): Double {
         fun f(i1: Int, i2: Int): Double {
             if (i1 == i2) return 0.0
             return if (i2 - i1 == 1) (points[i2].y - points[i1].y) / (points[i2].x - points[i1].x)
