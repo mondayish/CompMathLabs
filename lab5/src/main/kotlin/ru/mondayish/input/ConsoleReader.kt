@@ -17,11 +17,12 @@ class ConsoleReader : PointReader {
 
         val xValues: Array<Double>
         val yValues: Array<Double>
+        var funcNumber: Int = -1
         if(inputType == 2) {
-            val funcNumber: Int = getAvailableVariant(IntArray(functions.size) {it+1},
+            funcNumber = getAvailableVariant(IntArray(functions.size) {it+1},
                 "Выберите функцию:\n1 - y = ${functions[0].view}\n2 - y = ${functions[1].view}\n3 - y = ${functions[2].view}")
             xValues = getDoubleArray("Введите значения X:")
-            yValues = xValues.map { functions[funcNumber].func(it) }.toTypedArray()
+            yValues = xValues.map { functions[funcNumber - 1].func(it) }.toTypedArray()
         } else {
             xValues = getDoubleArray("Введите значения X:")
             yValues = getDoubleArray("Введите значения Y:")
@@ -35,11 +36,12 @@ class ConsoleReader : PointReader {
         val xToSolve: Double = getDoubleValue("Введите X для расчета:")
 
         val points: Array<Point> = Array(pointsCount) { Point(xValues[it], yValues[it]) }
-        return Input(inputType, pointsCount, points, method, xToSolve)
+        return Input(inputType, pointsCount, points, method, xToSolve, funcNumber)
     }
 
     private fun getDoubleValue(message: String): Double {
         val scanner = Scanner(System.`in`)
+        scanner.useLocale(Locale.US)
         println(message)
         return scanner.nextDouble()
     }
