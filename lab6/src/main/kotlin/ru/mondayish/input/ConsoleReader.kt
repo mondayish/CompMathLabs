@@ -31,7 +31,8 @@ class ConsoleReader {
         if(floor(n).roundToInt() + 1 < MIN_INTERVAL_COUNT || floor(n).roundToInt() + 1 > MAX_INTERVAL_COUNT)
             throw InputException("Кол-во интервалов должно быть от $MIN_INTERVAL_COUNT до $MAX_INTERVAL_COUNT!!!")
 
-        return Input(funcNumber, method, startConditions[0], startConditions[1], xn, h, accuracy)
+        return Input(functions[funcNumber], method, startConditions[0], startConditions[1],
+            xn, h,floor(n).roundToInt() + 1,  accuracy)
     }
 
     private fun getDoubleValue(message: String, max: Double = Double.MAX_VALUE, min: Double = Double.MIN_VALUE): Double {
