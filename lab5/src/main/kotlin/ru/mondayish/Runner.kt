@@ -17,7 +17,7 @@ fun main(args: Array<String>) {
 
     println("============================")
     println("Результат: ${round(result)}")
-    if(input.inputType == 2) println("Погрешность Rn(x) <= ${round(FaultCalculator().calculate(input))}")
+    if(input.inputType == 2) println("Погрешность R_n(x) <= ${round(FaultCalculator().calculate(input))}")
 }
 
 
