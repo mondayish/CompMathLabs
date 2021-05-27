@@ -20,7 +20,7 @@ class RungeKuttaMethod : DiffMethod {
             yValues[i] = yValues[i-1] + (k1 + 2*k2 + 2*k3 + k4)/6
         }
 
-        return MethodResult(indexes, yValues, xValues, exactYValues)
+        return MethodResult(indexes, xValues, yValues, exactYValues)
     }
 
     override fun getAccuracyOrder(): Int {
