@@ -1,4 +1,4 @@
-package ru.mondayish.input
+package ru.mondayish.console
 
 import ru.mondayish.exceptions.InputException
 import ru.mondayish.math.CommonUtils.Companion.MAX_ACCURACY

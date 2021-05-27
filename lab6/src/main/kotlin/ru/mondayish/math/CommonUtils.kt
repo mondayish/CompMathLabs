@@ -11,19 +11,27 @@ class CommonUtils {
         const val MAX_INTERVAL_COUNT: Int = 100000
 
         val functions: Array<MathFunction> = arrayOf(
-            MathFunction(view = "y' = y + (x + 1)*y^2", derivative = {x, y -> y + (x+1)*y*y},
-                exact = {x, c -> E.pow(x) / (c - x * E.pow(x))}, getConst = {x,y -> E.pow(x)/y + x*E.pow(x)}),
-            MathFunction(view = "y' = e^(2x) + y", derivative = {x, y -> y + E.pow(2*x)},
-                exact = {x, c -> (c + E.pow(x)) * E.pow(x)}, getConst = {x, y -> y/E.pow(x) - E.pow(x)}),
-            MathFunction(view = "y' = sin(x) + y", derivative = {x, y -> sin(x) + y},
-                exact = {x, c -> (c - E.pow(-x)*sin(x)/2 - E.pow(-x)*cos(x)/2) * E.pow(x)},
-                getConst = {x, y -> y/E.pow(x) + E.pow(-x)*sin(x)/2 + E.pow(-x)*cos(x)/2})
+            MathFunction(view = "y' = y + (x + 1)*y^2", derivative = { x, y -> y + (x + 1) * y * y },
+                exact = { x, c -> E.pow(x) / (c - x * E.pow(x)) }, getConst = { x, y -> E.pow(x) / y + x * E.pow(x) }),
+            MathFunction(view = "y' = e^(2x) + y", derivative = { x, y -> y + E.pow(2 * x) },
+                exact = { x, c -> (c + E.pow(x)) * E.pow(x) }, getConst = { x, y -> y / E.pow(x) - E.pow(x) }),
+            MathFunction(view = "y' = sin(x) + y", derivative = { x, y -> sin(x) + y },
+                exact = { x, c -> (c - E.pow(-x) * sin(x) / 2 - E.pow(-x) * cos(x) / 2) * E.pow(x) },
+                getConst = { x, y -> y / E.pow(x) + E.pow(-x) * sin(x) / 2 + E.pow(-x) * cos(x) / 2 })
         )
 
-        val roundToFixed = {x: Double, pos: Int -> round(x * 10.0.pow(pos))/10.0.pow(pos)}
+        fun roundToFixed(x: Double, pos: Int): String {
+            return (round(x * 10.0.pow(pos)) / 10.0.pow(pos)).toString()
+        }
 
-        val calculateExactValues = {func: MathFunction, xValues: DoubleArray, c: Double ->
-            xValues.map { func.exact(it, c) }.toDoubleArray()
+        fun calculateExactValues(func: MathFunction, xValues: DoubleArray, c: Double): DoubleArray {
+            return xValues.map { func.exact(it, c) }.toDoubleArray()
+        }
+
+        fun foundDecimalPLaces(x: Double): Int {
+            var result = 1
+            while (10.0.pow(-result) > x) result+=1
+            return result
         }
     }
 }

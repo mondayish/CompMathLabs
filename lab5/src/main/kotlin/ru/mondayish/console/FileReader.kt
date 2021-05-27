@@ -1,4 +1,4 @@
-package ru.mondayish.input
+package ru.mondayish.console
 
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json

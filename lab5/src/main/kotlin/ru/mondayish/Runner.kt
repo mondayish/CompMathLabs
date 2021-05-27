@@ -1,8 +1,8 @@
 package ru.mondayish
 
 import ru.mondayish.gui.Charts
-import ru.mondayish.input.ConsoleReader
-import ru.mondayish.input.FileReader
+import ru.mondayish.console.ConsoleReader
+import ru.mondayish.console.FileReader
 import ru.mondayish.math.FaultCalculator
 import ru.mondayish.math.LagrangeMethod
 import ru.mondayish.math.NewtonMethod

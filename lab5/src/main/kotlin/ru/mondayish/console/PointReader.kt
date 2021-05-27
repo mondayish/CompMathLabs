@@ -1,4 +1,4 @@
-package ru.mondayish.input
+package ru.mondayish.console
 
 import ru.mondayish.models.Input
 
