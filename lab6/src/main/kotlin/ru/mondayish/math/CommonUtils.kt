@@ -1,6 +1,8 @@
 package ru.mondayish.math
 
+import ru.mondayish.exceptions.InputException
 import ru.mondayish.models.MathFunction
+import ru.mondayish.models.MethodResult
 import kotlin.math.*
 
 class CommonUtils {
@@ -12,12 +14,12 @@ class CommonUtils {
 
         val functions: Array<MathFunction> = arrayOf(
             MathFunction(view = "y' = y + (x + 1)*y^2", derivative = { x, y -> y + (x + 1) * y * y },
-                exact = { x, c -> E.pow(x) / (c - x * E.pow(x)) }, getConst = { x, y -> E.pow(x) / y + x * E.pow(x) }),
+                exact = { x, c -> E.pow(x) / (c - x * E.pow(x)) }, const = { x, y -> E.pow(x) / y + x * E.pow(x) }),
             MathFunction(view = "y' = e^(2x) + y", derivative = { x, y -> y + E.pow(2 * x) },
-                exact = { x, c -> (c + E.pow(x)) * E.pow(x) }, getConst = { x, y -> y / E.pow(x) - E.pow(x) }),
+                exact = { x, c -> (c + E.pow(x)) * E.pow(x) }, const = { x, y -> y / E.pow(x) - E.pow(x) }),
             MathFunction(view = "y' = sin(x) + y", derivative = { x, y -> sin(x) + y },
                 exact = { x, c -> (c - E.pow(-x) * sin(x) / 2 - E.pow(-x) * cos(x) / 2) * E.pow(x) },
-                getConst = { x, y -> y / E.pow(x) + E.pow(-x) * sin(x) / 2 + E.pow(-x) * cos(x) / 2 })
+                const = { x, y -> y / E.pow(x) + E.pow(-x) * sin(x) / 2 + E.pow(-x) * cos(x) / 2 })
         )
 
         fun roundToFixed(x: Double, pos: Int): String {
@@ -32,6 +34,13 @@ class CommonUtils {
             var result = 1
             while (10.0.pow(-result) > x) result+=1
             return result
+        }
+
+        fun validateValues(methodResult: MethodResult){
+            methodResult.exactValues.forEach { if(it.isInfinite() || it.isNaN())
+                throw InputException("Ошибка вычисления, выберите другой интервал!!!") }
+            methodResult.derivativeValues.forEach { if(it.isInfinite() || it.isNaN())
+                throw InputException("Ошибка вычисления, выберите другой интервал!!!") }
         }
     }
 }

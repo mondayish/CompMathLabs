@@ -1,5 +1,8 @@
 package ru.mondayish.math
 
+import ru.mondayish.math.methods.AdamsMethod
+import ru.mondayish.math.methods.AdvancedEulerMethod
+import ru.mondayish.math.methods.DiffMethod
 import ru.mondayish.models.Input
 import kotlin.math.pow
 

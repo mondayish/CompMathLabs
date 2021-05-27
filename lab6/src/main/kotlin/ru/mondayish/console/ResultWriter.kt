@@ -20,6 +20,6 @@ class ResultWriter {
                 roundToFixed(methodResult.derivativeValues[it], dp),
                 roundToFixed(methodResult.exactValues[it], dp)
             )) }
-        println("Погрешность по правилу Рунге: ${RungeCalculator().calculateR(input)}")
+        println("Погрешность по правилу Рунге: ${roundToFixed(RungeCalculator().calculateR(input), 10)}")
     }
 }

@@ -1,4 +1,4 @@
-package ru.mondayish.math
+package ru.mondayish.math.methods
 
 import ru.mondayish.math.CommonUtils.Companion.calculateExactValues
 import ru.mondayish.models.Input
@@ -8,7 +8,7 @@ class RungeKuttaMethod : DiffMethod {
 
     override fun calculate(input: Input): MethodResult {
         val xValues = DoubleArray(input.n) {input.x0 + it*input.h}
-        val exactYValues: DoubleArray = calculateExactValues(input.func, xValues, input.func.getConst(input.x0, input.y0))
+        val exactYValues: DoubleArray = calculateExactValues(input.func, xValues, input.func.const(input.x0, input.y0))
         val yValues = DoubleArray(input.n) {input.y0}
         val indexes = IntArray(input.n) {it}
 

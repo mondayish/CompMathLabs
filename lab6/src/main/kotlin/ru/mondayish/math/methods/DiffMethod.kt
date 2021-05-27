@@ -1,4 +1,4 @@
-package ru.mondayish.math
+package ru.mondayish.math.methods
 
 import ru.mondayish.models.Input
 import ru.mondayish.models.MethodResult

@@ -1,4 +1,4 @@
-package ru.mondayish.math
+package ru.mondayish.math.methods
 
 import ru.mondayish.math.CommonUtils.Companion.calculateExactValues
 import ru.mondayish.models.Input
@@ -11,7 +11,7 @@ class AdamsMethod : DiffMethod {
 
     override fun calculate(input: Input): MethodResult {
         val xValues = DoubleArray(input.n) {input.x0 + it*input.h}
-        val exactYValues: DoubleArray = calculateExactValues(input.func, xValues, input.func.getConst(input.x0, input.y0))
+        val exactYValues: DoubleArray = calculateExactValues(input.func, xValues, input.func.const(input.x0, input.y0))
         val firstYValues = getFirstYValues(input)
         val yValues = DoubleArray(input.n) {if(it < FIRST_ELEMENTS_COUNT) firstYValues[it] else 0.0}
         val derivativeValues = DoubleArray(input.n) {if(it < FIRST_ELEMENTS_COUNT) input.func.derivative(xValues[it], yValues[it]) else 0.0}
