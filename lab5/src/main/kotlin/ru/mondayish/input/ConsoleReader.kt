@@ -1,4 +1,4 @@
-package ru.mondayish.console
+package ru.mondayish.input
 
 import ru.mondayish.exceptions.InputException
 import ru.mondayish.math.CommonUtils.Companion.MAX_POINTS_NUMBER
